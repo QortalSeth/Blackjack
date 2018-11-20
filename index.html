@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+    <style>
+        #Hit{display: none}
+        #Stay{display: none}
+
+        .handDiv
+        {
+          margin-top: 30px;
+          width: 100%;
+        //  margin-bottom: 30px;
+        }
+        #buttons
+        {
+          height: 50px;
+          top: 200px;
+
+        }
+
+#playerScoreDiv
+{
+  clear: left;
+}
+    </style>
+
+
+    <h1>Welcome to BlackJack</h1>
+    <h2 id="by">by Seth Jackson</h2>
+
+    <div id="betDiv">
+    <span id='betSpan'>Bet Amount:</span>
+    <input id='betTextfield' type='number'></input>
+    </div>
+
+    <div id="dealerHandDiv"></div>
+    <div id="playerHandDiv" class="handDiv"> </div>
+
+    <div id="buttonsDiv"></div>
+    <div id="testDiv"></div>
+
+    <script type="text/javascript" src="Scripts/require.js" data-main="Scripts/Main.js"></script>
+</body>
+</html>
