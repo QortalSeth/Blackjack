@@ -3,6 +3,7 @@
 <html>
 <body>
     <style>
+
         #Hit{display: none}
         #Stay{display: none}
 
@@ -31,13 +32,15 @@
 
     <div id="betDiv">
     <span id='betSpan'>Bet Amount:</span>
-    <input id='betTextfield' type='number'></input>
+    <input id='betTextfield' type='number'>
     </div>
 
     <div id="dealerHandDiv"></div>
     <div id="playerHandDiv" class="handDiv"> </div>
 
-    <div id="buttonsDiv"></div>
+    <div id="buttonsDiv">
+        <input id="startGameButton" type="button" value="Start New Game" disabled='true'>
+    </div>
     <div id="testDiv"></div>
 
     <script type="text/javascript" src="Scripts/require.js" data-main="Scripts/Main.js"></script>

@@ -16,19 +16,21 @@ define(["require", "exports", "./HTMLElements", "./ButtonListeners"], function (
             this.game = game;
             this.parent = parent;
             this.isPlayer = isPlayer;
-            this.mainDiv = document.createElement('div');
-            this.imageDiv = document.createElement('div');
-            this.scoreDiv = document.createElement('div');
-            this.buttonDiv = document.createElement('div');
+            this.mainDiv = document.createElement("div");
+            this.imageDiv = document.createElement("div");
+            this.scoreDiv = document.createElement("div");
+            this.buttonDiv = document.createElement("div");
             this.mainDiv.appendChild(this.imageDiv);
             this.mainDiv.appendChild(this.scoreDiv);
             this.mainDiv.appendChild(this.buttonDiv);
-            this.winnerText = '';
-            if (isPlayer)
+            this.winnerText = "";
+            if (isPlayer) {
                 this.hand = game.playerCards[index];
+                this.createButtons();
+            }
             else
                 this.hand = game.dealerCards;
-            parent.appendChild(this.div);
+            parent.appendChild(this.mainDiv);
         }
         createButtons() {
             // create button objects
@@ -46,49 +48,44 @@ define(["require", "exports", "./HTMLElements", "./ButtonListeners"], function (
             this.buttonDiv.appendChild(this.doubleDownButton);
             this.buttonDiv.appendChild(this.surrenderButton);
             //add button listeners
-            this.hitButton.addEventListener('click', listeners.hitListener);
-            this.stayButton.addEventListener('click', listeners.stayListener);
-            this.splitButton.addEventListener('click', listeners.splitListener);
-            this.insuranceButton.addEventListener('click', listeners.insuranceListener);
-            this.doubleDownButton.addEventListener('click', listeners.doubleDownListener);
-            this.surrenderButton.addEventListener('click', listeners.surrenderListener);
+            this.hitButton.addEventListener("click", (event) => this.hit());
+            this.stayButton.addEventListener("click", listeners.stayListener.bind(this));
+            this.splitButton.addEventListener("click", listeners.splitListener.bind(this));
+            this.insuranceButton.addEventListener("click", listeners.insuranceListener.bind(this));
+            this.doubleDownButton.addEventListener("click", listeners.doubleDownListener.bind(this));
+            this.surrenderButton.addEventListener("click", listeners.surrenderListener.bind(this));
         }
         showAvailableButtons() {
-            buttonDisplay(this.hitButton, this.hand.checkHit());
-            buttonDisplay(this.stayButton, this.hand.checkStay());
-            buttonDisplay(this.splitButton, this.hand.checkSplit());
-            buttonDisplay(this.insuranceButton, this.hand.checkInsurance());
-            buttonDisplay(this.doubleDownButton, this.hand.checkDoubleDown());
-            buttonDisplay(this.surrenderButton, this.hand.checkSurrender());
+            if (this.isPlayer) {
+                this.buttonDisplay(this.hitButton, this.hand.checkHit());
+                this.buttonDisplay(this.stayButton, this.hand.checkStay());
+                this.buttonDisplay(this.splitButton, this.hand.checkSplit());
+                this.buttonDisplay(this.insuranceButton, this.hand.checkInsurance());
+                this.buttonDisplay(this.doubleDownButton, this.hand.checkDoubleDown());
+                this.buttonDisplay(this.surrenderButton, this.hand.checkSurrender());
+            }
         }
         buttonDisplay(button, show) {
             if (show)
-                button.style.display = 'inline';
+                button.style.display = "inline";
             else
-                button.style.display = 'none';
+                button.style.display = "none";
         }
         updateScore() {
-            this.scoreDiv.innerText = `Hand Score: ${this.hand.getScoreText()}`;
+            if (this.isPlayer)
+                this.scoreDiv.innerText = `Hand Score: ${this.hand.getScoreText()}`;
+            else
+                this.scoreDiv.innerText = `Dealer Score: ${this.hand.getScoreText()}`;
         }
         updateHand() {
             this.showAvailableButtons();
             this.updateScore();
         }
-        checkForEndOfGame() {
-            this.game.checkWinner();
-            if (this.game.gameOver) {
-                // display winning text reset buttons
-                this.html.winnerText.innerText = this.game.winningText;
-                if (this.game.winnerIsPlayer)
-                    this.html.winnerText.style.color = 'blue';
-                else
-                    this.html.winnerText.style.color = 'red';
-                this.html.startGameButton.style.display = 'inline';
-                this.html.hitButton.style.display = 'none';
-                this.html.stayButton.style.display = 'none';
-            }
+        hit() {
+            html.addImageToDiv(this.imageDiv, this.game.hit(this.hand));
+            this.updateHand();
         }
     }
     exports.HtmlHand = HtmlHand;
 });
-//# sourceMappingURL=htmlHand.js.map
+//# sourceMappingURL=HtmlHand.js.map

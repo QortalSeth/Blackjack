@@ -20,13 +20,8 @@ define(["require", "exports", "./Hand", "./Deck"], function (require, exports, H
         change checkWinner to only be called after dealerTurn. make it generate a list of win/lose statements for each hand
         move playerWins and dealerWins to Hand class
         */
-        playerHit(handIndex) {
-            let hand = this.playerCards[handIndex];
+        hit(hand) {
             let card = hand.addCardFromDeck(this.deck);
-            return card;
-        }
-        dealerHit() {
-            let card = this.dealerCards.addCardFromDeck(this.deck);
             return card;
         }
         playerStay(handIndex) {
@@ -40,21 +35,21 @@ define(["require", "exports", "./Hand", "./Deck"], function (require, exports, H
         }
         DealerTurn() {
             while (Math.floor(this.dealerCards.getLowestScore()) < 17)
-                this.dealerHit();
+                this.hit(this.dealerCards);
             this.checkWinner();
         }
         splitPlayerHand(handIndex) {
             let hand = this.playerCards[handIndex];
             let newHand = new Hand_1.Hand(this.applyBet(hand.bet));
             newHand.addCardFromCard(hand.cards.pop());
-            this.playerHit(handIndex);
+            this.hit(hand);
+            this.hit(newHand);
             this.playerCards.push(newHand);
-            this.playerHit(this.playerCards.length - 1);
         }
         doubleDown(handIndex) {
             let hand = this.playerCards[handIndex];
             hand.bet += this.applyBet(hand.bet);
-            this.playerHit(handIndex);
+            this.hit(hand);
             this.playerStay(handIndex);
         }
         surrender(handIndex) {

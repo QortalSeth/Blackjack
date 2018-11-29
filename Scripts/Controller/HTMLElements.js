@@ -6,8 +6,9 @@ define(["require", "exports"], function (require, exports) {
     exports.betTextfield = document.getElementById('betTextfield');
     exports.dealerDiv = document.getElementById('dealerHandDiv');
     exports.playerDiv = document.getElementById('playerHandDiv');
-    exports.buttonsdiv = document.getElementById('buttonsDiv');
+    exports.buttonsDiv = document.getElementById('buttonsDiv');
     exports.testDiv = document.getElementById('testDiv');
+    exports.startGameButton = document.getElementById('startGameButton');
     function addImageToDiv(div, card) {
         var imageTag = document.createElement("img");
         imageTag.setAttribute("src", card.imageSrc);

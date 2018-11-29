@@ -7,9 +7,10 @@ export let betTextfield = <HTMLInputElement>document.getElementById('betTextfiel
 export let dealerDiv = document.getElementById('dealerHandDiv')
 export let playerDiv = document.getElementById('playerHandDiv')
 
-export let buttonsdiv = document.getElementById('buttonsDiv')
+export let buttonsDiv = document.getElementById('buttonsDiv')
 export let testDiv = document.getElementById('testDiv')
 
+export let startGameButton = <HTMLInputElement> document.getElementById('startGameButton')
 
 
 

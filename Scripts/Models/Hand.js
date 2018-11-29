@@ -48,7 +48,7 @@ define(["require", "exports"], function (require, exports) {
                 return text;
             }
             else
-                return '0';
+                return "0";
         }
         getHighestScore() {
             if (this.score.length > 0) {
@@ -70,6 +70,12 @@ define(["require", "exports"], function (require, exports) {
             }
             return 0;
         }
+        checkBust() {
+            return this.getLowestScore() <= 21;
+        }
+        checkTurnOver() {
+            return this.checkBust() || this.checkStay();
+        }
         checkDoubleDown() {
             let scoreCheck = this.getHighestScore() < 11;
             let cardCountCheck = this.cards.length <= 2;
@@ -80,10 +86,14 @@ define(["require", "exports"], function (require, exports) {
             let cardCountCheck = this.cards.length === 2;
             return scoreCheck && cardCountCheck;
         }
-        checkHit() { return this.getLowestScore() <= 21 && this.stayed === false; }
-        checkStay() { return this.stayed; }
+        checkHit() {
+            return this.getLowestScore() <= 21 && this.stayed === false;
+        }
+        checkStay() {
+            return !this.stayed;
+        }
         checkInsurance() {
-            return this.cards[0].type === 'Ace';
+            return this.cards[0].type === "Ace";
         }
         checkBlackjack() {
             let scoreCheck = this.getHighestScore() === 21;
