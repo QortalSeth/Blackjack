@@ -1,26 +1,26 @@
-import {Game}               from "../Models/Game"
-import * as html            from "./HTMLElements"
-import * as playerFunctions from "./PlayerFunctions"
-import {HtmlHand}           from "./HtmlHand"
-import * as listeners       from "./ButtonListeners"
+import {Game}         from "../Models/Game"
+import * as html      from "./HTMLElements"
+import {HtmlHand}     from "./HtmlHand"
+import * as listeners from "./ButtonListeners"
 
 export class Controller {
     game: Game
     debug = false
-    startMoney = 10000
     dealerHand: HtmlHand
     playerHand: HtmlHand[]
+    startMoney = 10000
 
-    constructor () {
+    constructor (public currentScore) {
         html.startGameButton.addEventListener("click", listeners.startGameListener.bind(this))
         html.betTextfield.addEventListener("keyup", listeners.betTextFieldListener.bind(this))
+        html.scoreAmount.innerText = this.startMoney.toString()
     }
 
 
     startNewGame () {
-        this.game = new Game(this.startMoney, Math.floor(parseInt(html.betTextfield.innerText)))
-        this.resetGameData()
-
+        this.game = new Game(this.currentScore, Math.floor(parseInt(html.betTextfield.innerText)))
+        this.resetGameHtmlData()
+        this.updateCurrentScore()
 
         if (this.debug)
             html.testDiv.innerText = this.game.deck.toString()
@@ -42,16 +42,19 @@ export class Controller {
     */
 
 
-    resetGameData () {
+    resetGameHtmlData () {
         html.removeDataFromDiv(html.dealerDiv)
         html.removeDataFromDiv(html.playerDiv)
-        playerFunctions.disableBetTextField
+        this.betDisplay(false)
         this.dealerHand = new HtmlHand(0, this.game, html.dealerDiv, false)
         this.playerHand = []
         this.playerHand.push(new HtmlHand(0, this.game, html.playerDiv, true))
 
     }
 
+    updateCurrentScore () {
+        html.scoreAmount.innerText = this.game.money.toString()
+    }
 
     betDisplay (display: boolean) {
         if (display) {
@@ -63,6 +66,4 @@ export class Controller {
             html.betTextfield.style.display = "none"
         }
     }
-
-
 }

@@ -1,48 +1,56 @@
-
 <!DOCTYPE html>
 <html>
 <body>
-    <style>
+<style>
 
-        #Hit{display: none}
-        #Stay{display: none}
+    #Hit {
+        display: none
+    }
 
-        .handDiv
-        {
-          margin-top: 30px;
-          width: 100%;
-        //  margin-bottom: 30px;
-        }
-        #buttons
-        {
-          height: 50px;
-          top: 200px;
+    #Stay {
+        display: none
+    }
 
-        }
+    .handDiv {
+        margin-top: 30px;
+        width: 100%;
+    / / margin-bottom: 30 px;
+    }
 
-#playerScoreDiv
-{
-  clear: left;
-}
-    </style>
+    #buttons {
+        height: 50px;
+        top: 200px;
+
+    }
+
+    #playerScoreDiv {
+        clear: left;
+    }
+</style>
 
 
-    <h1>Welcome to BlackJack</h1>
-    <h2 id="by">by Seth Jackson</h2>
+<h1>Welcome to BlackJack</h1>
+<h2 id="by">by Seth Jackson</h2>
 
-    <div id="betDiv">
+<div id="betDiv">
     <span id='betSpan'>Bet Amount:</span>
     <input id='betTextfield' type='number'>
+
+    <div>
+        <span id="scoreSpan"> Current Score: </span>
+        <span id="scoreAmount"></span>
+
     </div>
+</div>
 
-    <div id="dealerHandDiv"></div>
-    <div id="playerHandDiv" class="handDiv"> </div>
+<div id="dealerHandDiv"></div>
+<div id="playerHandDiv" class="handDiv"></div>
 
-    <div id="buttonsDiv">
-        <input id="startGameButton" type="button" value="Start New Game" disabled='true'>
-    </div>
-    <div id="testDiv"></div>
+<div id="buttonsDiv">
+    <input id="startGameButton" type="button" value="Start New Game" disabled='true'>
+</div>
+<div id="testDiv"></div>
 
-    <script type="text/javascript" src="Scripts/require.js" data-main="Scripts/Main.js"></script>
+<script type="text/javascript" src="Scripts/require.js" data-main="Scripts/Main.js"></script>
 </body>
 </html>

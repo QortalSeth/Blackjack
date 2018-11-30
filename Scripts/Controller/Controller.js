@@ -5,22 +5,24 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-define(["require", "exports", "../Models/Game", "./HTMLElements", "./PlayerFunctions", "./HtmlHand", "./ButtonListeners"], function (require, exports, Game_1, html, playerFunctions, HtmlHand_1, listeners) {
+define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", "./ButtonListeners"], function (require, exports, Game_1, html, HtmlHand_1, listeners) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     html = __importStar(html);
-    playerFunctions = __importStar(playerFunctions);
     listeners = __importStar(listeners);
     class Controller {
-        constructor() {
+        constructor(currentScore) {
+            this.currentScore = currentScore;
             this.debug = false;
             this.startMoney = 10000;
             html.startGameButton.addEventListener("click", listeners.startGameListener.bind(this));
             html.betTextfield.addEventListener("keyup", listeners.betTextFieldListener.bind(this));
+            html.scoreAmount.innerText = this.startMoney.toString();
         }
         startNewGame() {
-            this.game = new Game_1.Game(this.startMoney, Math.floor(parseInt(html.betTextfield.innerText)));
-            this.resetGameData();
+            this.game = new Game_1.Game(this.currentScore, Math.floor(parseInt(html.betTextfield.innerText)));
+            this.resetGameHtmlData();
+            this.updateCurrentScore();
             if (this.debug)
                 html.testDiv.innerText = this.game.deck.toString();
             this.playerHand[0].hit();
@@ -36,13 +38,16 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./PlayerFunct
             this.checkForEndOfGame()
           }
         */
-        resetGameData() {
+        resetGameHtmlData() {
             html.removeDataFromDiv(html.dealerDiv);
             html.removeDataFromDiv(html.playerDiv);
-            playerFunctions.disableBetTextField;
+            this.betDisplay(false);
             this.dealerHand = new HtmlHand_1.HtmlHand(0, this.game, html.dealerDiv, false);
             this.playerHand = [];
             this.playerHand.push(new HtmlHand_1.HtmlHand(0, this.game, html.playerDiv, true));
+        }
+        updateCurrentScore() {
+            html.scoreAmount.innerText = this.game.money.toString();
         }
         betDisplay(display) {
             if (display) {
