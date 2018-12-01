@@ -1,7 +1,7 @@
-import {Game}         from "../Models/Game"
-import * as html      from "./HTMLElements"
-import {HtmlHand}     from "./HtmlHand"
-import * as listeners from "./ButtonListeners"
+import {Game}     from "../Models/Game"
+import * as html  from "./HTMLElements"
+import {HtmlHand} from "./HtmlHand"
+import {Card}     from "../Models/Card"
 
 export class Controller {
     game: Game
@@ -11,22 +11,21 @@ export class Controller {
     startMoney = 10000
 
     constructor (public currentScore) {
-        html.startGameButton.addEventListener("click", listeners.startGameListener.bind(this))
-        html.betTextfield.addEventListener("keyup", listeners.betTextFieldListener.bind(this))
+        html.startGameButton.addEventListener("click", (event) => this.startNewGame())
+        html.betTextfield.addEventListener("keyup", (event) => this.betTextFieldListener())
         html.scoreAmount.innerText = this.startMoney.toString()
     }
 
 
     startNewGame () {
-        this.game = new Game(this.currentScore, Math.floor(parseInt(html.betTextfield.innerText)))
+        this.game = new Game(this.currentScore, Math.floor(parseInt(html.betTextfield.value)))
         this.resetGameHtmlData()
         this.updateCurrentScore()
 
         if (this.debug)
             html.testDiv.innerText = this.game.deck.toString()
-        this.playerHand[0].hit()
-        this.playerHand[0].hit()
-        this.dealerHand.hit()
+
+        this.initialHits(true)
         html.startGameButton.style.display = "none"
         html.betSpan.style.display = "none"
         html.betTextfield.style.display = "none"
@@ -34,12 +33,19 @@ export class Controller {
 
     }
 
-    /*
-      playerHit(handIndex: number) {
-        html.addImageToDiv(html.playerDiv, this.game.playerHit(handIndex))
-        this.checkForEndOfGame()
-      }
-    */
+    initialHits (debug: boolean) {
+        if (debug) {
+            this.dealerHand.hit(new Card("8", "Diamonds"))
+            this.playerHand[0].initialHit(new Card("Ace", "Hearts"))
+            this.playerHand[0].hit(new Card("Ace", "Clubs"))
+        }
+
+        else {
+            this.dealerHand.hit()
+            this.playerHand[0].initialHit()
+            this.playerHand[0].hit()
+        }
+    }
 
 
     resetGameHtmlData () {
@@ -53,7 +59,7 @@ export class Controller {
     }
 
     updateCurrentScore () {
-        html.scoreAmount.innerText = this.game.money.toString()
+        html.scoreAmount.innerText = this.game.score.toString()
     }
 
     betDisplay (display: boolean) {
@@ -65,5 +71,15 @@ export class Controller {
             html.betSpan.style.display = "none"
             html.betTextfield.style.display = "none"
         }
+    }
+
+    betTextFieldListener () {
+        let textField = html.betTextfield
+        let number = parseInt(textField.value)
+        if (isNaN(number) || number < 20) {
+            html.startGameButton.disabled = true
+        }
+        else
+            html.startGameButton.disabled = false
     }
 }

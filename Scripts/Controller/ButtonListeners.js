@@ -10,14 +10,8 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
     Object.defineProperty(exports, "__esModule", { value: true });
     html = __importStar(html);
     function startGameListener() {
-        this.startNewGame();
     }
     exports.startGameListener = startGameListener;
-    function hit() {
-        html.addImageToDiv(this.imageDiv, this.game.hit(this.hand));
-        this.updateHand();
-    }
-    exports.hit = hit;
     function stayListener() {
     }
     exports.stayListener = stayListener;

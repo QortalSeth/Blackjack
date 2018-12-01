@@ -2,8 +2,9 @@ define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Hand {
-        constructor(bet) {
+        constructor(bet, index) {
             this.bet = bet;
+            this.index = index;
             this.cards = [];
             this.score = [];
             this.stayed = false;
@@ -70,38 +71,39 @@ define(["require", "exports"], function (require, exports) {
             }
             return 0;
         }
-        checkBust() {
-            return this.getLowestScore() <= 21;
-        }
-        checkTurnOver() {
-            return this.checkBust() || this.checkStay();
-        }
-        checkDoubleDown() {
-            let scoreCheck = this.getHighestScore() < 11;
-            let cardCountCheck = this.cards.length <= 2;
-            return scoreCheck && cardCountCheck;
-        }
-        checkSplit() {
-            let scoreCheck = this.getHighestScore() < 11;
-            let cardCountCheck = this.cards.length === 2;
-            return scoreCheck && cardCountCheck;
-        }
-        checkHit() {
-            return this.getLowestScore() <= 21 && this.stayed === false;
-        }
-        checkStay() {
-            return !this.stayed;
-        }
-        checkInsurance() {
-            return this.cards[0].type === "Ace";
-        }
         checkBlackjack() {
             let scoreCheck = this.getHighestScore() === 21;
             let cardCountCheck = this.cards.length === 2;
             return scoreCheck && cardCountCheck;
         }
+        checkBust() {
+            return this.getLowestScore() > 21;
+        }
+        checkDoubleDown() {
+            let scoreCheck = this.getHighestScore() < 11;
+            let cardCountCheck = this.cards.length <= 2;
+            return scoreCheck && cardCountCheck && this.checkStay();
+        }
+        checkHit() {
+            return this.getLowestScore() <= 21 && this.checkStay();
+        }
+        checkStay() {
+            return !this.stayed;
+        }
+        checkInsurance() {
+            return this.cards[0].type === "Ace" && this.checkStay();
+        }
+        checkSplit() {
+            let cardTypeCheck = this.cards[0].getScore() === this.cards[1].getScore();
+            let cardCountCheck = this.cards.length === 2;
+            let handCountCheck = this.index < 4;
+            return cardTypeCheck && cardCountCheck && handCountCheck && this.checkStay();
+        }
         checkSurrender() {
-            return this.cards.length === 2;
+            return this.cards.length === 2 && this.checkStay();
+        }
+        checkTurnOver() {
+            return this.checkBust() || this.checkStay();
         }
         decideWinner(dealerHand) {
             let dealerScore = dealerHand.getHighestScore();

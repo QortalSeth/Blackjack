@@ -2,17 +2,16 @@ define(["require", "exports", "./Hand", "./Deck"], function (require, exports, H
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Game {
-        constructor(startMoney, bet) {
+        constructor(score, bet) {
+            this.score = score;
             this.numberOfDecks = 3;
-            this.dealerCards = new Hand_1.Hand(0);
+            this.dealerCards = new Hand_1.Hand(0, 0);
             this.playerCards = [];
-            this.playerCards.push(new Hand_1.Hand(0));
-            this.money = startMoney;
-            this.playerCards.push(new Hand_1.Hand(this.applyBet(bet)));
+            this.playerCards.push(new Hand_1.Hand(this.applyBet(bet), 0));
             this.deck = new Deck_1.Deck(this.numberOfDecks);
         }
         applyBet(bet) {
-            this.money -= bet;
+            this.score -= bet;
             return bet;
         }
         /*
@@ -20,8 +19,12 @@ define(["require", "exports", "./Hand", "./Deck"], function (require, exports, H
         change checkWinner to only be called after dealerTurn. make it generate a list of win/lose statements for each hand
         move playerWins and dealerWins to Hand class
         */
-        hit(hand) {
-            let card = hand.addCardFromDeck(this.deck);
+        hit(hand, card) {
+            if (card == undefined) {
+                card = hand.addCardFromDeck(this.deck);
+            }
+            else
+                hand.addCardFromCard(card);
             return card;
         }
         playerStay(handIndex) {
@@ -30,7 +33,7 @@ define(["require", "exports", "./Hand", "./Deck"], function (require, exports, H
         checkWinner() {
             for (let hand of this.playerCards) {
                 let winnings = hand.decideWinner(this.dealerCards);
-                this.money += winnings;
+                this.score += winnings;
             }
         }
         DealerTurn() {
@@ -40,7 +43,7 @@ define(["require", "exports", "./Hand", "./Deck"], function (require, exports, H
         }
         splitPlayerHand(handIndex) {
             let hand = this.playerCards[handIndex];
-            let newHand = new Hand_1.Hand(this.applyBet(hand.bet));
+            let newHand = new Hand_1.Hand(this.applyBet(hand.bet), hand.index + 1);
             newHand.addCardFromCard(hand.cards.pop());
             this.hit(hand);
             this.hit(newHand);
@@ -61,7 +64,7 @@ define(["require", "exports", "./Hand", "./Deck"], function (require, exports, H
             let hand = this.playerCards[handIndex];
             insureAmount = Math.max(insureAmount, hand.bet / 2);
             hand.insurance = insureAmount;
-            this.money -= insureAmount;
+            this.score -= insureAmount;
         }
     }
     exports.Game = Game;

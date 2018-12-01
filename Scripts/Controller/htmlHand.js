@@ -5,11 +5,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-define(["require", "exports", "./HTMLElements", "./ButtonListeners"], function (require, exports, html, listeners) {
+define(["require", "exports", "./HTMLElements"], function (require, exports, html) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     html = __importStar(html);
-    listeners = __importStar(listeners);
     class HtmlHand {
         constructor(index, game, parent, isPlayer) {
             this.index = index;
@@ -49,18 +48,18 @@ define(["require", "exports", "./HTMLElements", "./ButtonListeners"], function (
             this.buttonDiv.appendChild(this.surrenderButton);
             //add button listeners
             this.hitButton.addEventListener("click", (event) => this.hit());
-            this.stayButton.addEventListener("click", listeners.stayListener.bind(this));
-            this.splitButton.addEventListener("click", listeners.splitListener.bind(this));
-            this.insuranceButton.addEventListener("click", listeners.insuranceListener.bind(this));
-            this.doubleDownButton.addEventListener("click", listeners.doubleDownListener.bind(this));
-            this.surrenderButton.addEventListener("click", listeners.surrenderListener.bind(this));
+            this.stayButton.addEventListener("click", (event) => this.stay());
+            this.splitButton.addEventListener("click", (event) => this.split());
+            this.insuranceButton.addEventListener("click", (event) => this.insurance());
+            this.doubleDownButton.addEventListener("click", (event) => this.doubleDown());
+            this.surrenderButton.addEventListener("click", (event) => this.surrender());
         }
         showAvailableButtons() {
             if (this.isPlayer) {
                 this.buttonDisplay(this.hitButton, this.hand.checkHit());
                 this.buttonDisplay(this.stayButton, this.hand.checkStay());
                 this.buttonDisplay(this.splitButton, this.hand.checkSplit());
-                this.buttonDisplay(this.insuranceButton, this.hand.checkInsurance());
+                this.buttonDisplay(this.insuranceButton, this.game.dealerCards.checkInsurance());
                 this.buttonDisplay(this.doubleDownButton, this.hand.checkDoubleDown());
                 this.buttonDisplay(this.surrenderButton, this.hand.checkSurrender());
             }
@@ -81,9 +80,44 @@ define(["require", "exports", "./HTMLElements", "./ButtonListeners"], function (
             this.showAvailableButtons();
             this.updateScore();
         }
-        hit() {
-            html.addImageToDiv(this.imageDiv, this.game.hit(this.hand));
+        checkEndofTurn() {
+        }
+        hit(card) {
+            if (card == undefined) {
+                html.addImageToDiv(this.imageDiv, this.game.hit(this.hand));
+            }
+            else {
+                html.addImageToDiv(this.imageDiv, this.game.hit(this.hand, card));
+            }
             this.updateHand();
+            if (this.hand.checkBlackjack()) {
+                this.stay();
+                this.scoreDiv.innerText = `Hand Score: Blackjack`;
+            }
+            else if (this.hand.checkBust()) {
+                this.stay();
+                this.scoreDiv.innerText = `Hand Score: Bust`;
+            }
+        }
+        initialHit(card) {
+            if (card == undefined) {
+                html.addImageToDiv(this.imageDiv, this.game.hit(this.hand));
+            }
+            else {
+                html.addImageToDiv(this.imageDiv, this.game.hit(this.hand, card));
+            }
+        }
+        stay() {
+            this.hand.stayed = true;
+            this.updateHand();
+        }
+        split() {
+        }
+        insurance() {
+        }
+        doubleDown() {
+        }
+        surrender() {
         }
     }
     exports.HtmlHand = HtmlHand;

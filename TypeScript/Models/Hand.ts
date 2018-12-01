@@ -10,7 +10,7 @@ export class Hand {
     insurance: number
 
 
-    constructor (public bet: number) {
+    constructor (public bet: number, public index: number) {
         this.cards = []
         this.score = []
         this.stayed = false
@@ -89,40 +89,6 @@ export class Hand {
     }
 
 
-    checkBust (): boolean {
-        return this.getLowestScore() <= 21
-    }
-
-    checkTurnOver (): boolean {
-        return this.checkBust() || this.checkStay()
-    }
-
-    checkDoubleDown (): boolean {
-        let scoreCheck = this.getHighestScore() < 11
-        let cardCountCheck = this.cards.length <= 2
-
-        return scoreCheck && cardCountCheck
-    }
-
-    checkSplit (): boolean {
-        let scoreCheck = this.getHighestScore() < 11
-        let cardCountCheck = this.cards.length === 2
-
-        return scoreCheck && cardCountCheck
-    }
-
-    checkHit () {
-        return this.getLowestScore() <= 21 && this.stayed === false
-    }
-
-    checkStay () {
-        return !this.stayed
-    }
-
-    checkInsurance (): boolean {
-        return this.cards[0].type === "Ace"
-    }
-
     checkBlackjack (): boolean {
         let scoreCheck = this.getHighestScore() === 21
         let cardCountCheck = this.cards.length === 2
@@ -130,8 +96,43 @@ export class Hand {
         return scoreCheck && cardCountCheck
     }
 
+    checkBust (): boolean {
+        return this.getLowestScore() > 21
+    }
+
+
+    checkDoubleDown (): boolean {
+        let scoreCheck = this.getHighestScore() < 11
+        let cardCountCheck = this.cards.length <= 2
+
+        return scoreCheck && cardCountCheck && this.checkStay()
+    }
+
+    checkHit () {
+        return this.getLowestScore() <= 21 && this.checkStay()
+    }
+
+    checkStay () {
+        return !this.stayed
+    }
+
+    checkInsurance (): boolean {
+        return this.cards[0].type === "Ace" && this.checkStay()
+    }
+
+    checkSplit (): boolean {
+        let cardTypeCheck = this.cards[0].getScore() === this.cards[1].getScore()
+        let cardCountCheck = this.cards.length === 2
+        let handCountCheck = this.index < 4
+        return cardTypeCheck && cardCountCheck && handCountCheck && this.checkStay()
+    }
+
     checkSurrender (): boolean {
-        return this.cards.length === 2
+        return this.cards.length === 2 && this.checkStay()
+    }
+
+    checkTurnOver (): boolean {
+        return this.checkBust() || this.checkStay()
     }
 
     decideWinner (dealerHand: Hand): number {

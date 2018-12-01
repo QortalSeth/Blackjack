@@ -7,23 +7,18 @@ export class Game {
     playerCards: Hand[]
     deck: Deck
     numberOfDecks = 3
-
-    money: number
     highScore: number
 
 
-    constructor (startMoney: number, bet: number) {
-        this.dealerCards = new Hand(0)
+    constructor (public score: number, bet: number) {
+        this.dealerCards = new Hand(0, 0)
         this.playerCards = []
-        this.playerCards.push(new Hand(0))
-        this.money = startMoney
-        this.playerCards.push(new Hand(this.applyBet(bet)))
+        this.playerCards.push(new Hand(this.applyBet(bet), 0))
         this.deck = new Deck(this.numberOfDecks)
-
     }
 
     applyBet (bet: number) {
-        this.money -= bet
+        this.score -= bet
         return bet
     }
 
@@ -33,10 +28,17 @@ export class Game {
     move playerWins and dealerWins to Hand class
     */
 
-    hit (hand: Hand): Card {
-        let card = hand.addCardFromDeck(this.deck)
+    hit (hand: Hand, card?: Card): Card {
+
+        if (card == undefined) {
+            card = hand.addCardFromDeck(this.deck)
+        }
+
+        else hand.addCardFromCard(card)
+
         return card
     }
+
 
     playerStay (handIndex: number) {
         this.playerCards[handIndex].stayed = true
@@ -47,7 +49,7 @@ export class Game {
 
         for (let hand of this.playerCards) {
             let winnings = hand.decideWinner(this.dealerCards)
-            this.money += winnings
+            this.score += winnings
         }
     }
 
@@ -60,7 +62,7 @@ export class Game {
 
     splitPlayerHand (handIndex: number) {
         let hand = this.playerCards[handIndex]
-        let newHand = new Hand(this.applyBet(hand.bet))
+        let newHand = new Hand(this.applyBet(hand.bet), hand.index + 1)
 
         newHand.addCardFromCard(hand.cards.pop())
         this.hit(hand)
@@ -85,7 +87,7 @@ export class Game {
         let hand = this.playerCards[handIndex]
         insureAmount = Math.max(insureAmount, hand.bet / 2)
         hand.insurance = insureAmount
-        this.money -= insureAmount
+        this.score -= insureAmount
     }
 
 }

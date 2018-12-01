@@ -5,39 +5,42 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", "./ButtonListeners"], function (require, exports, Game_1, html, HtmlHand_1, listeners) {
+define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", "../Models/Card"], function (require, exports, Game_1, html, HtmlHand_1, Card_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     html = __importStar(html);
-    listeners = __importStar(listeners);
     class Controller {
         constructor(currentScore) {
             this.currentScore = currentScore;
             this.debug = false;
             this.startMoney = 10000;
-            html.startGameButton.addEventListener("click", listeners.startGameListener.bind(this));
-            html.betTextfield.addEventListener("keyup", listeners.betTextFieldListener.bind(this));
+            html.startGameButton.addEventListener("click", (event) => this.startNewGame());
+            html.betTextfield.addEventListener("keyup", (event) => this.betTextFieldListener());
             html.scoreAmount.innerText = this.startMoney.toString();
         }
         startNewGame() {
-            this.game = new Game_1.Game(this.currentScore, Math.floor(parseInt(html.betTextfield.innerText)));
+            this.game = new Game_1.Game(this.currentScore, Math.floor(parseInt(html.betTextfield.value)));
             this.resetGameHtmlData();
             this.updateCurrentScore();
             if (this.debug)
                 html.testDiv.innerText = this.game.deck.toString();
-            this.playerHand[0].hit();
-            this.playerHand[0].hit();
-            this.dealerHand.hit();
+            this.initialHits(true);
             html.startGameButton.style.display = "none";
             html.betSpan.style.display = "none";
             html.betTextfield.style.display = "none";
         }
-        /*
-          playerHit(handIndex: number) {
-            html.addImageToDiv(html.playerDiv, this.game.playerHit(handIndex))
-            this.checkForEndOfGame()
-          }
-        */
+        initialHits(debug) {
+            if (debug) {
+                this.dealerHand.hit(new Card_1.Card("8", "Diamonds"));
+                this.playerHand[0].initialHit(new Card_1.Card("Ace", "Hearts"));
+                this.playerHand[0].hit(new Card_1.Card("Ace", "Clubs"));
+            }
+            else {
+                this.dealerHand.hit();
+                this.playerHand[0].initialHit();
+                this.playerHand[0].hit();
+            }
+        }
         resetGameHtmlData() {
             html.removeDataFromDiv(html.dealerDiv);
             html.removeDataFromDiv(html.playerDiv);
@@ -47,7 +50,7 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
             this.playerHand.push(new HtmlHand_1.HtmlHand(0, this.game, html.playerDiv, true));
         }
         updateCurrentScore() {
-            html.scoreAmount.innerText = this.game.money.toString();
+            html.scoreAmount.innerText = this.game.score.toString();
         }
         betDisplay(display) {
             if (display) {
@@ -58,6 +61,15 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
                 html.betSpan.style.display = "none";
                 html.betTextfield.style.display = "none";
             }
+        }
+        betTextFieldListener() {
+            let textField = html.betTextfield;
+            let number = parseInt(textField.value);
+            if (isNaN(number) || number < 20) {
+                html.startGameButton.disabled = true;
+            }
+            else
+                html.startGameButton.disabled = false;
         }
     }
     exports.Controller = Controller;
