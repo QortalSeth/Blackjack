@@ -45,9 +45,9 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
             html.removeDataFromDiv(html.dealerDiv);
             html.removeDataFromDiv(html.playerDiv);
             this.betDisplay(false);
-            this.dealerHand = new HtmlHand_1.HtmlHand(0, this.game, html.dealerDiv, false);
+            this.dealerHand = new HtmlHand_1.HtmlHand(0, this, html.dealerDiv, false);
             this.playerHand = [];
-            this.playerHand.push(new HtmlHand_1.HtmlHand(0, this.game, html.playerDiv, true));
+            this.playerHand.push(new HtmlHand_1.HtmlHand(0, this, html.playerDiv, true));
         }
         updateCurrentScore() {
             html.scoreAmount.innerText = this.game.score.toString();

@@ -21,6 +21,13 @@ define(["require", "exports"], function (require, exports) {
         div.appendChild(imageTag);
     }
     exports.addImageToDiv = addImageToDiv;
+    function redrawImageDiv(div, hand) {
+        removeDataFromDiv(div);
+        for (let card of hand.hand.cards) {
+            addImageToDiv(div, card);
+        }
+    }
+    exports.redrawImageDiv = redrawImageDiv;
     function createButton(name) {
         var button = document.createElement("input");
         button.setAttribute("type", "button");

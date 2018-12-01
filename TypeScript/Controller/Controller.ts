@@ -52,9 +52,9 @@ export class Controller {
         html.removeDataFromDiv(html.dealerDiv)
         html.removeDataFromDiv(html.playerDiv)
         this.betDisplay(false)
-        this.dealerHand = new HtmlHand(0, this.game, html.dealerDiv, false)
+        this.dealerHand = new HtmlHand(0, this, html.dealerDiv, false)
         this.playerHand = []
-        this.playerHand.push(new HtmlHand(0, this.game, html.playerDiv, true))
+        this.playerHand.push(new HtmlHand(0, this, html.playerDiv, true))
 
     }
 

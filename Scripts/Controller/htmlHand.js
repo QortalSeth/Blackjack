@@ -10,26 +10,50 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
     Object.defineProperty(exports, "__esModule", { value: true });
     html = __importStar(html);
     class HtmlHand {
-        constructor(index, game, parent, isPlayer) {
+        constructor(index, controller, parent, isPlayer) {
             this.index = index;
-            this.game = game;
+            this.controller = controller;
             this.parent = parent;
             this.isPlayer = isPlayer;
+            this.game = controller.game;
+            if (isPlayer)
+                this.hand = this.game.playerCards[index];
+            else
+                this.hand = this.game.dealerCards;
+            this.manageDivs();
+            parent.appendChild(this.mainDiv);
+            this.winnerText = "";
+            if (isPlayer) {
+                this.hand = this.game.playerCards[index];
+                this.createButtons();
+            }
+            else
+                this.hand = this.game.dealerCards;
+        }
+        manageDivs() {
             this.mainDiv = document.createElement("div");
             this.imageDiv = document.createElement("div");
             this.scoreDiv = document.createElement("div");
             this.buttonDiv = document.createElement("div");
+            this.betDiv = document.createElement("div");
+            this.winningsDiv = document.createElement("div");
             this.mainDiv.appendChild(this.imageDiv);
             this.mainDiv.appendChild(this.scoreDiv);
+            this.mainDiv.appendChild(this.betDiv);
+            this.mainDiv.appendChild(this.winningsDiv);
             this.mainDiv.appendChild(this.buttonDiv);
-            this.winnerText = "";
-            if (isPlayer) {
-                this.hand = game.playerCards[index];
-                this.createButtons();
+            if (this.isPlayer) {
+                this.betSpan = document.createElement("span");
+                this.betSpan.innerText = "Current Bet: ";
+                this.betAmount = document.createElement("span");
+                this.betAmount.innerText = this.hand.bet.toString();
+                this.betDiv.appendChild(this.betSpan);
+                this.betDiv.appendChild(this.betAmount);
+                this.winningsSpan = document.createElement("span");
+                this.winningsAmount = document.createElement("span");
+                this.winningsDiv.appendChild(this.winningsSpan);
+                this.winningsDiv.appendChild(this.winningsAmount);
             }
-            else
-                this.hand = game.dealerCards;
-            parent.appendChild(this.mainDiv);
         }
         createButtons() {
             // create button objects
@@ -112,6 +136,14 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
             this.updateHand();
         }
         split() {
+            this.game.splitPlayerHand(this.index);
+            let newIndex = this.index + 1;
+            let newHtmlHand = new HtmlHand(newIndex, this.controller, html.playerDiv, true);
+            html.redrawImageDiv(this.imageDiv, this);
+            html.redrawImageDiv(newHtmlHand.imageDiv, newHtmlHand);
+            this.updateHand();
+            newHtmlHand.updateHand();
+            this.controller.playerHand.push(newHtmlHand);
         }
         insurance() {
         }

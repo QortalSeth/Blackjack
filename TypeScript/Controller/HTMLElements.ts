@@ -1,4 +1,5 @@
-import {Card} from "../Models/card"
+import {Card}     from "../Models/card"
+import {HtmlHand} from "TypeScript/Controller/HtmlHand"
 
 export let betDiv = document.getElementById("betDiv")
 export let betSpan = document.getElementById("betSpan")
@@ -14,7 +15,6 @@ export let scoreSpan = document.getElementById("scoreSpan")
 export let scoreAmount = document.getElementById("scoreAmount")
 export let startGameButton = <HTMLInputElement>document.getElementById("startGameButton")
 
-
 export function addImageToDiv (div: HTMLElement, card: Card) {
     var imageTag = document.createElement("img")
     imageTag.setAttribute("src", card.imageSrc)
@@ -23,6 +23,13 @@ export function addImageToDiv (div: HTMLElement, card: Card) {
     imageTag.setAttribute("alt", "Error: Card Not Found")
     imageTag.style.marginRight = "10px"
     div.appendChild(imageTag)
+}
+
+export function redrawImageDiv (div: HTMLElement, hand: HtmlHand) {
+    removeDataFromDiv(div)
+    for (let card of hand.hand.cards) {
+        addImageToDiv(div, card)
+    }
 }
 
 export function createButton (name: string): HTMLInputElement {
@@ -38,3 +45,4 @@ export function removeDataFromDiv (div: HTMLElement) {
     while (div.firstChild)
         div.removeChild(div.firstChild)
 }
+

@@ -9,6 +9,8 @@ export class HtmlHand {
     imageDiv: HTMLElement
     scoreDiv: HTMLElement
     buttonDiv: HTMLElement
+    betDiv: HTMLElement
+    winningsDiv: HTMLElement
 
     winnerText: string
 
@@ -19,33 +21,73 @@ export class HtmlHand {
     doubleDownButton: HTMLInputElement
     surrenderButton: HTMLInputElement
 
+    betSpan: HTMLElement
+    betAmount: HTMLElement
+    winningsSpan: HTMLElement
+    winningsAmount: HTMLElement
+
+
+    game: Game
     hand: Hand
 
 
-    constructor (public index: number, public game: Game, public parent: HTMLElement, public isPlayer: boolean) {
-        this.mainDiv = document.createElement("div")
-        this.imageDiv = document.createElement("div")
-        this.scoreDiv = document.createElement("div")
-        this.buttonDiv = document.createElement("div")
+    constructor (public index: number, public controller: Controller, public parent: HTMLElement, public isPlayer: boolean) {
+        this.game = controller.game
 
-        this.mainDiv.appendChild(this.imageDiv)
-        this.mainDiv.appendChild(this.scoreDiv)
-        this.mainDiv.appendChild(this.buttonDiv)
+        if (isPlayer)
+            this.hand = this.game.playerCards[index]
+        else
+            this.hand = this.game.dealerCards
+
+        this.manageDivs()
+        parent.appendChild(this.mainDiv)
 
         this.winnerText = ""
 
         if (isPlayer) {
-            this.hand = game.playerCards[index]
+            this.hand = this.game.playerCards[index]
             this.createButtons()
         }
         else
-            this.hand = game.dealerCards
+            this.hand = this.game.dealerCards
 
-        parent.appendChild(this.mainDiv)
+
+    }
+
+    private manageDivs () {
+        this.mainDiv = document.createElement("div")
+        this.imageDiv = document.createElement("div")
+        this.scoreDiv = document.createElement("div")
+        this.buttonDiv = document.createElement("div")
+        this.betDiv = document.createElement("div")
+        this.winningsDiv = document.createElement("div")
+
+        this.mainDiv.appendChild(this.imageDiv)
+        this.mainDiv.appendChild(this.scoreDiv)
+        this.mainDiv.appendChild(this.betDiv)
+        this.mainDiv.appendChild(this.winningsDiv)
+        this.mainDiv.appendChild(this.buttonDiv)
+
+
+        if (this.isPlayer) {
+            this.betSpan = document.createElement("span")
+            this.betSpan.innerText = "Current Bet: "
+            this.betAmount = document.createElement("span")
+            this.betAmount.innerText = this.hand.bet.toString()
+
+            this.betDiv.appendChild(this.betSpan)
+            this.betDiv.appendChild(this.betAmount)
+
+            this.winningsSpan = document.createElement("span")
+            this.winningsAmount = document.createElement("span")
+
+            this.winningsDiv.appendChild(this.winningsSpan)
+            this.winningsDiv.appendChild(this.winningsAmount)
+        }
     }
 
 
-    createButtons () {
+    private createButtons () {
 
         // create button objects
         this.hitButton = html.createButton("Hit")
@@ -146,6 +188,16 @@ export class HtmlHand {
     }
 
     split () {
+        this.game.splitPlayerHand(this.index)
+        let newIndex = this.index + 1
+        let newHtmlHand = new HtmlHand(newIndex, this.controller, html.playerDiv, true)
+
+        html.redrawImageDiv(this.imageDiv, this)
+        html.redrawImageDiv(newHtmlHand.imageDiv, newHtmlHand)
+        this.updateHand()
+        newHtmlHand.updateHand()
+        this.controller.playerHand.push(newHtmlHand)
+
     }
 
     insurance () {
