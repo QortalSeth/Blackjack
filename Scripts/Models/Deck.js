@@ -14,6 +14,9 @@ define(["require", "exports", "./Card"], function (require, exports, Card_1) {
             }
             this.shuffle();
         }
+        addCard(type, suit) {
+            this.cards.push(new Card_1.Card(type, suit));
+        }
         shuffle() {
             let timesToShuffle = this.getRandomInt(1, 5);
             for (let j = 0; j < timesToShuffle; j++) {

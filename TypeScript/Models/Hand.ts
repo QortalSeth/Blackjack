@@ -8,6 +8,7 @@ export class Hand {
     winningText: string
     surrender: boolean
     insurance: number
+    winnings: number
 
 
     constructor (public bet: number, public index: number) {
@@ -96,6 +97,15 @@ export class Hand {
         return scoreCheck && cardCountCheck
     }
 
+    check21 (): boolean {
+        for (let score of this.score) {
+            if (score === 21) {
+                return true
+            }
+        }
+        return false
+    }
+
     checkBust (): boolean {
         return this.getLowestScore() > 21
     }
@@ -116,14 +126,14 @@ export class Hand {
         return !this.stayed
     }
 
-    checkInsurance (): boolean {
-        return this.cards[0].type === "Ace" && this.checkStay()
+    checkInsurance (dealerCards: Hand): boolean {
+        return dealerCards.cards[0].type === "Ace" && this.checkStay() && this.insurance === 0 && this.getHighestScore() < 21
     }
 
-    checkSplit (): boolean {
+    checkSplit (handsNum: number): boolean {
         let cardTypeCheck = this.cards[0].getScore() === this.cards[1].getScore()
         let cardCountCheck = this.cards.length === 2
-        let handCountCheck = this.index < 4
+        let handCountCheck = handsNum < 4
         return cardTypeCheck && cardCountCheck && handCountCheck && this.checkStay()
     }
 
@@ -135,47 +145,47 @@ export class Hand {
         return this.checkBust() || this.checkStay()
     }
 
-    decideWinner (dealerHand: Hand): number {
+    decideWinner (dealerHand: Hand) {
         let dealerScore = dealerHand.getHighestScore()
         let playerScore = this.getHighestScore()
 
         if (this.surrender === true) {
             this.winningText = "Surrendered"
-            return this.bet / 2
+            this.winnings = this.bet / 2
         }
 
         if (this.checkBlackjack() === true) {
             this.winningText = "Player Wins by Blackjack :D"
-            return this.bet * 3 / 2 + this.bet
+            this.winnings = this.bet * 3 / 2 + this.bet
         }
 
         if (dealerHand.checkBlackjack() === true) {
             this.winningText = "Dealer Wins by Blackjack :("
-            return this.insurance * 2
+            this.winnings = this.insurance * 2
         }
 
         if (playerScore > 21) {
             this.winningText = "Dealer Wins"
-            return 0
+            this.winnings = 0
         }
 
         if (dealerScore > 21) {
             this.winningText = "Player Wins"
-            return this.bet * 2
+            this.winnings = this.bet * 2
         }
 
         if (dealerScore > playerScore) {
             this.winningText = "Dealer Wins"
-            return 0
+            this.winnings = 0
         }
 
         if (dealerScore === playerScore) {
             this.winningText = "Well call it a draw @_@"
-            return this.bet
+            this.winnings = this.bet
         }
         if (dealerScore < playerScore) {
             this.winningText = "Player Wins"
-            return this.bet * 2
+            this.winnings = this.bet * 2
         }
 
     }

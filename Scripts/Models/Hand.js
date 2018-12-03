@@ -76,6 +76,14 @@ define(["require", "exports"], function (require, exports) {
             let cardCountCheck = this.cards.length === 2;
             return scoreCheck && cardCountCheck;
         }
+        check21() {
+            for (let score of this.score) {
+                if (score === 21) {
+                    return true;
+                }
+            }
+            return false;
+        }
         checkBust() {
             return this.getLowestScore() > 21;
         }
@@ -90,13 +98,13 @@ define(["require", "exports"], function (require, exports) {
         checkStay() {
             return !this.stayed;
         }
-        checkInsurance() {
-            return this.cards[0].type === "Ace" && this.checkStay();
+        checkInsurance(dealerCards) {
+            return dealerCards.cards[0].type === "Ace" && this.checkStay() && this.insurance === 0 && this.getHighestScore() < 21;
         }
-        checkSplit() {
+        checkSplit(handsNum) {
             let cardTypeCheck = this.cards[0].getScore() === this.cards[1].getScore();
             let cardCountCheck = this.cards.length === 2;
-            let handCountCheck = this.index < 4;
+            let handCountCheck = handsNum < 4;
             return cardTypeCheck && cardCountCheck && handCountCheck && this.checkStay();
         }
         checkSurrender() {
@@ -110,35 +118,35 @@ define(["require", "exports"], function (require, exports) {
             let playerScore = this.getHighestScore();
             if (this.surrender === true) {
                 this.winningText = "Surrendered";
-                return this.bet / 2;
+                this.winnings = this.bet / 2;
             }
             if (this.checkBlackjack() === true) {
                 this.winningText = "Player Wins by Blackjack :D";
-                return this.bet * 3 / 2 + this.bet;
+                this.winnings = this.bet * 3 / 2 + this.bet;
             }
             if (dealerHand.checkBlackjack() === true) {
                 this.winningText = "Dealer Wins by Blackjack :(";
-                return this.insurance * 2;
+                this.winnings = this.insurance * 2;
             }
             if (playerScore > 21) {
                 this.winningText = "Dealer Wins";
-                return 0;
+                this.winnings = 0;
             }
             if (dealerScore > 21) {
                 this.winningText = "Player Wins";
-                return this.bet * 2;
+                this.winnings = this.bet * 2;
             }
             if (dealerScore > playerScore) {
                 this.winningText = "Dealer Wins";
-                return 0;
+                this.winnings = 0;
             }
             if (dealerScore === playerScore) {
                 this.winningText = "Well call it a draw @_@";
-                return this.bet;
+                this.winnings = this.bet;
             }
             if (dealerScore < playerScore) {
                 this.winningText = "Player Wins";
-                return this.bet * 2;
+                this.winnings = this.bet * 2;
             }
         }
     }

@@ -19,6 +19,10 @@ export class Deck {
     this.shuffle()
   }
 
+  addCard(type: string, suit: string)
+  {
+    this.cards.push(new Card(type, suit))
+  }
   shuffle(): void {
     let timesToShuffle = this.getRandomInt(1, 5)
 

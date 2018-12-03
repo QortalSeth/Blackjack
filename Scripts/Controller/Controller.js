@@ -5,7 +5,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", "../Models/Card"], function (require, exports, Game_1, html, HtmlHand_1, Card_1) {
+define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand"], function (require, exports, Game_1, html, HtmlHand_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     html = __importStar(html);
@@ -31,23 +31,70 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
         }
         initialHits(debug) {
             if (debug) {
-                this.dealerHand.hit(new Card_1.Card("8", "Diamonds"));
-                this.playerHand[0].initialHit(new Card_1.Card("Ace", "Hearts"));
-                this.playerHand[0].hit(new Card_1.Card("Ace", "Clubs"));
+                //this.testAceBust()
+                //this.testDoubleDown()
+                //this.test21()
+                this.testInsurance();
             }
-            else {
-                this.dealerHand.hit();
-                this.playerHand[0].initialHit();
-                this.playerHand[0].hit();
-            }
+            this.dealerHand.hit();
+            this.playerHands[0].initialHit();
+            this.playerHands[0].hit();
+        }
+        testInsurance() {
+            //     this.game.deck.addCard("Ace", "Clubs")
+            //     this.game.deck.addCard("Queen", "Hearts")
+            this.game.deck.addCard("Ace", "Hearts");
+            this.game.deck.addCard("King", "Spades");
+            this.game.deck.addCard("King", "Spades");
+            this.game.deck.addCard("King", "Spades");
+            this.game.deck.addCard("King", "Spades");
+            this.game.deck.addCard("9", "Spades");
+            this.game.deck.addCard("Ace", "Spades");
+            this.game.deck.addCard("Ace", "Diamonds");
+            this.game.deck.addCard("Ace", "Hearts");
+            this.game.deck.addCard("Ace", "Hearts");
+            this.game.deck.addCard("Ace", "Clubs");
+            this.game.deck.addCard("Ace", "Diamonds");
+        }
+        testDoubleDown() {
+            this.game.deck.addCard("6", "Hearts");
+            this.game.deck.addCard("5", "Hearts");
+            this.game.deck.addCard("8", "Hearts");
+        }
+        testAceBust() {
+            this.game.deck.addCard("Ace", "Hearts");
+            this.game.deck.addCard("King", "Hearts");
+            this.game.deck.addCard("Ace", "Clubs");
+            this.game.deck.addCard("8", "Diamonds");
+        }
+        testMaxSplits() {
+            this.game.deck.addCard("King", "Spades");
+            this.game.deck.addCard("King", "Spades");
+            this.game.deck.addCard("King", "Spades");
+            this.game.deck.addCard("King", "Spades");
+            this.game.deck.addCard("9", "Spades");
+            this.game.deck.addCard("Ace", "Spades");
+            this.game.deck.addCard("Ace", "Diamonds");
+            this.game.deck.addCard("Ace", "Hearts");
+            this.game.deck.addCard("Ace", "Hearts");
+            this.game.deck.addCard("Ace", "Clubs");
+            this.game.deck.addCard("8", "Diamonds");
+        }
+        test21() {
+            this.game.deck.addCard("4", "Spades");
+            this.game.deck.addCard("5", "Diamonds");
+            this.game.deck.addCard("10", "Hearts");
+            this.game.deck.addCard("Ace", "Hearts");
+            this.game.deck.addCard("Ace", "Clubs");
+            this.game.deck.addCard("8", "Diamonds");
         }
         resetGameHtmlData() {
             html.removeDataFromDiv(html.dealerDiv);
             html.removeDataFromDiv(html.playerDiv);
             this.betDisplay(false);
             this.dealerHand = new HtmlHand_1.HtmlHand(0, this, html.dealerDiv, false);
-            this.playerHand = [];
-            this.playerHand.push(new HtmlHand_1.HtmlHand(0, this, html.playerDiv, true));
+            this.playerHands = [];
+            this.playerHands.push(new HtmlHand_1.HtmlHand(0, this, html.playerDiv, true));
         }
         updateCurrentScore() {
             html.scoreAmount.innerText = this.game.score.toString();
@@ -70,6 +117,9 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
             }
             else
                 html.startGameButton.disabled = false;
+        }
+        dealerTurn() {
+            this.game.dealerTurn();
         }
     }
     exports.Controller = Controller;

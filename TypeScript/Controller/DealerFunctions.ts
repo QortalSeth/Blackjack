@@ -1,8 +1,7 @@
-
-import { Game } from '../Models/Game'
-import { Controller } from './Controller'
-import * as html from './HTMLElements'
-
+import {Game}       from "../Models/Game"
+import {Controller} from "./Controller"
+import * as html    from "./HTMLElements"
+/*
 export let DealerTurn = function(controller: Controller) {
   let lowChanceToLose = Math.floor(controller.game.dealerCards.getLowestScore()) < 17
   let dealerScore = controller.game.dealerCards.getHighestScore()
@@ -16,7 +15,7 @@ export let DealerTurn = function(controller: Controller) {
   controller.checkForEndOfGame()
 }
 
-
+*/
 
 /*
 let DealerTurn = function(this: Controller) {

@@ -1,6 +1,5 @@
-import {Controller}   from "./Controller/Controller"
-import * as html      from "./Controller/HTMLElements"
-import * as listeners from "./Controller/ButtonListeners"
+import {Controller} from "./Controller/Controller"
+import * as html    from "./Controller/HTMLElements"
 
 let controller = new Controller(10000)
 

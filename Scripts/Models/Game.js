@@ -32,18 +32,26 @@ define(["require", "exports", "./Hand", "./Deck"], function (require, exports, H
         }
         checkWinner() {
             for (let hand of this.playerCards) {
-                let winnings = hand.decideWinner(this.dealerCards);
-                this.score += winnings;
+                hand.decideWinner(this.dealerCards);
+                this.score += hand.winnings;
             }
         }
-        DealerTurn() {
+        checkEndoPlayerTurn() {
+            for (let hand of this.playerCards) {
+                if (hand.stayed === false) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        dealerTurn() {
             while (Math.floor(this.dealerCards.getLowestScore()) < 17)
                 this.hit(this.dealerCards);
             this.checkWinner();
         }
         splitPlayerHand(handIndex) {
             let hand = this.playerCards[handIndex];
-            let newHand = new Hand_1.Hand(this.applyBet(hand.bet), hand.index + 1);
+            let newHand = new Hand_1.Hand(this.applyBet(hand.bet), this.playerCards.length);
             newHand.addCardFromCard(hand.cards.pop());
             this.hit(hand);
             this.hit(newHand);
@@ -60,9 +68,9 @@ define(["require", "exports", "./Hand", "./Deck"], function (require, exports, H
             hand.surrender = true;
             this.playerStay(handIndex);
         }
-        insureHand(handIndex, insureAmount) {
+        insureHand(handIndex) {
             let hand = this.playerCards[handIndex];
-            insureAmount = Math.max(insureAmount, hand.bet / 2);
+            let insureAmount = hand.bet / 2;
             hand.insurance = insureAmount;
             this.score -= insureAmount;
         }

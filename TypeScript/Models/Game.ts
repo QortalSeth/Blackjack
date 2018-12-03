@@ -48,13 +48,23 @@ export class Game {
     checkWinner () {
 
         for (let hand of this.playerCards) {
-            let winnings = hand.decideWinner(this.dealerCards)
-            this.score += winnings
+            hand.decideWinner(this.dealerCards)
+            this.score += hand.winnings
         }
     }
 
+    checkEndoPlayerTurn (): boolean {
 
-    DealerTurn () {
+        for (let hand of this.playerCards) {
+            if (hand.stayed === false) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    dealerTurn () {
         while (Math.floor(this.dealerCards.getLowestScore()) < 17)
             this.hit(this.dealerCards)
         this.checkWinner()
@@ -62,7 +72,7 @@ export class Game {
 
     splitPlayerHand (handIndex: number) {
         let hand = this.playerCards[handIndex]
-        let newHand = new Hand(this.applyBet(hand.bet), hand.index + 1)
+        let newHand = new Hand(this.applyBet(hand.bet), this.playerCards.length)
 
         newHand.addCardFromCard(hand.cards.pop())
         this.hit(hand)
@@ -83,9 +93,9 @@ export class Game {
         this.playerStay(handIndex)
     }
 
-    insureHand (handIndex: number, insureAmount: number) {
+    insureHand (handIndex: number) {
         let hand = this.playerCards[handIndex]
-        insureAmount = Math.max(insureAmount, hand.bet / 2)
+        let insureAmount = hand.bet / 2
         hand.insurance = insureAmount
         this.score -= insureAmount
     }

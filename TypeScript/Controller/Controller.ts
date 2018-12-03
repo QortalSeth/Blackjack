@@ -7,10 +7,10 @@ export class Controller {
     game: Game
     debug = false
     dealerHand: HtmlHand
-    playerHand: HtmlHand[]
+    playerHands: HtmlHand[]
     startMoney = 10000
 
-    constructor (public currentScore) {
+    constructor (public currentScore: number) {
         html.startGameButton.addEventListener("click", (event) => this.startNewGame())
         html.betTextfield.addEventListener("keyup", (event) => this.betTextFieldListener())
         html.scoreAmount.innerText = this.startMoney.toString()
@@ -35,16 +35,71 @@ export class Controller {
 
     initialHits (debug: boolean) {
         if (debug) {
-            this.dealerHand.hit(new Card("8", "Diamonds"))
-            this.playerHand[0].initialHit(new Card("Ace", "Hearts"))
-            this.playerHand[0].hit(new Card("Ace", "Clubs"))
+            //this.testAceBust()
+            //this.testDoubleDown()
+            //this.test21()
+            this.testInsurance()
         }
 
-        else {
-            this.dealerHand.hit()
-            this.playerHand[0].initialHit()
-            this.playerHand[0].hit()
-        }
+        this.dealerHand.hit()
+        this.playerHands[0].initialHit()
+        this.playerHands[0].hit()
+
+    }
+
+    testInsurance () {
+        //     this.game.deck.addCard("Ace", "Clubs")
+        //     this.game.deck.addCard("Queen", "Hearts")
+        this.game.deck.addCard("Ace", "Hearts")
+
+        this.game.deck.addCard("King", "Spades")
+        this.game.deck.addCard("King", "Spades")
+        this.game.deck.addCard("King", "Spades")
+        this.game.deck.addCard("King", "Spades")
+        this.game.deck.addCard("9", "Spades")
+        this.game.deck.addCard("Ace", "Spades")
+        this.game.deck.addCard("Ace", "Diamonds")
+        this.game.deck.addCard("Ace", "Hearts")
+        this.game.deck.addCard("Ace", "Hearts")
+        this.game.deck.addCard("Ace", "Clubs")
+        this.game.deck.addCard("Ace", "Diamonds")
+    }
+
+    testDoubleDown () {
+        this.game.deck.addCard("6", "Hearts")
+        this.game.deck.addCard("5", "Hearts")
+        this.game.deck.addCard("8", "Hearts")
+    }
+
+    testAceBust () {
+        this.game.deck.addCard("Ace", "Hearts")
+        this.game.deck.addCard("King", "Hearts")
+
+        this.game.deck.addCard("Ace", "Clubs")
+        this.game.deck.addCard("8", "Diamonds")
+    }
+
+    testMaxSplits () {
+        this.game.deck.addCard("King", "Spades")
+        this.game.deck.addCard("King", "Spades")
+        this.game.deck.addCard("King", "Spades")
+        this.game.deck.addCard("King", "Spades")
+        this.game.deck.addCard("9", "Spades")
+        this.game.deck.addCard("Ace", "Spades")
+        this.game.deck.addCard("Ace", "Diamonds")
+        this.game.deck.addCard("Ace", "Hearts")
+        this.game.deck.addCard("Ace", "Hearts")
+        this.game.deck.addCard("Ace", "Clubs")
+        this.game.deck.addCard("8", "Diamonds")
+    }
+
+    test21 () {
+        this.game.deck.addCard("4", "Spades")
+        this.game.deck.addCard("5", "Diamonds")
+        this.game.deck.addCard("10", "Hearts")
+        this.game.deck.addCard("Ace", "Hearts")
+        this.game.deck.addCard("Ace", "Clubs")
+        this.game.deck.addCard("8", "Diamonds")
     }
 
 
@@ -53,8 +108,8 @@ export class Controller {
         html.removeDataFromDiv(html.playerDiv)
         this.betDisplay(false)
         this.dealerHand = new HtmlHand(0, this, html.dealerDiv, false)
-        this.playerHand = []
-        this.playerHand.push(new HtmlHand(0, this, html.playerDiv, true))
+        this.playerHands = []
+        this.playerHands.push(new HtmlHand(0, this, html.playerDiv, true))
 
     }
 
@@ -82,4 +137,12 @@ export class Controller {
         else
             html.startGameButton.disabled = false
     }
+
+    dealerTurn () {
+        this.game.dealerTurn()
+
+
+
+    }
+
 }

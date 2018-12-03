@@ -10,6 +10,7 @@ export class HtmlHand {
     scoreDiv: HTMLElement
     buttonDiv: HTMLElement
     betDiv: HTMLElement
+    insuranceDiv: HTMLElement
     winningsDiv: HTMLElement
 
     winnerText: string
@@ -60,13 +61,16 @@ export class HtmlHand {
         this.scoreDiv = document.createElement("div")
         this.buttonDiv = document.createElement("div")
         this.betDiv = document.createElement("div")
+        this.insuranceDiv = document.createElement("div")
         this.winningsDiv = document.createElement("div")
 
         this.mainDiv.appendChild(this.imageDiv)
         this.mainDiv.appendChild(this.scoreDiv)
         this.mainDiv.appendChild(this.betDiv)
+        this.mainDiv.appendChild(this.insuranceDiv)
         this.mainDiv.appendChild(this.winningsDiv)
         this.mainDiv.appendChild(this.buttonDiv)
+        this.mainDiv.appendChild(document.createElement("br"))
 
 
         if (this.isPlayer) {
@@ -83,6 +87,7 @@ export class HtmlHand {
 
             this.winningsDiv.appendChild(this.winningsSpan)
             this.winningsDiv.appendChild(this.winningsAmount)
+
         }
     }
 
@@ -105,6 +110,7 @@ export class HtmlHand {
         this.buttonDiv.appendChild(this.doubleDownButton)
         this.buttonDiv.appendChild(this.surrenderButton)
 
+
         //add button listeners
         this.hitButton.addEventListener("click", (event) => this.hit())
         this.stayButton.addEventListener("click", (event) => this.stay())
@@ -120,8 +126,8 @@ export class HtmlHand {
         if (this.isPlayer) {
             this.buttonDisplay(this.hitButton, this.hand.checkHit())
             this.buttonDisplay(this.stayButton, this.hand.checkStay())
-            this.buttonDisplay(this.splitButton, this.hand.checkSplit())
-            this.buttonDisplay(this.insuranceButton, this.game.dealerCards.checkInsurance())
+            this.buttonDisplay(this.splitButton, this.hand.checkSplit(this.controller.playerHands.length))
+            this.buttonDisplay(this.insuranceButton, this.hand.checkInsurance(this.game.dealerCards))
             this.buttonDisplay(this.doubleDownButton, this.hand.checkDoubleDown())
             this.buttonDisplay(this.surrenderButton, this.hand.checkSurrender())
         }
@@ -142,13 +148,31 @@ export class HtmlHand {
     }
 
     public updateHand () {
-        this.showAvailableButtons()
         this.updateScore()
+
+        if (this.hand.checkBlackjack()) {
+            this.hand.stayed = true
+            this.scoreDiv.innerText = `Hand Score: Blackjack`
+        }
+
+        else if (this.hand.check21()) {
+            this.hand.stayed = true
+            this.scoreDiv.innerText = `Hand Score: 21`
+        }
+        else if (this.hand.checkBust()) {
+            this.hand.stayed = true
+            //    this.scoreDiv.innerText = `Hand Score: Bust`
+        }
+
+        this.showAvailableButtons()
+
+        if(this.game.checkEndoPlayerTurn())
+        {this.controller.dealerTurn()}
+
     }
 
-    checkEndofTurn () {
 
-    }
+
 
 
     hit (card?: Card) {
@@ -160,18 +184,8 @@ export class HtmlHand {
             html.addImageToDiv(this.imageDiv, this.game.hit(this.hand, card))
         }
         this.updateHand()
-        if (this.hand.checkBlackjack()) {
-            this.stay()
-            this.scoreDiv.innerText = `Hand Score: Blackjack`
-        }
-
-        else if (this.hand.checkBust()) {
-            this.stay();
-            this.scoreDiv.innerText = `Hand Score: Bust`
-        }
-
-
     }
+
 
     initialHit (card?: Card) {
         if (card == undefined) {
@@ -189,24 +203,37 @@ export class HtmlHand {
 
     split () {
         this.game.splitPlayerHand(this.index)
-        let newIndex = this.index + 1
+        let newIndex = this.controller.playerHands.length
         let newHtmlHand = new HtmlHand(newIndex, this.controller, html.playerDiv, true)
 
         html.redrawImageDiv(this.imageDiv, this)
         html.redrawImageDiv(newHtmlHand.imageDiv, newHtmlHand)
-        this.updateHand()
-        newHtmlHand.updateHand()
-        this.controller.playerHand.push(newHtmlHand)
+        this.controller.playerHands.push(newHtmlHand)
 
+        for (let hand of this.controller.playerHands) {
+            hand.updateHand()
+        }
+        this.controller.updateCurrentScore()
     }
 
     insurance () {
+        this.game.insureHand(this.index)
+
+        this.insuranceDiv.innerText = `Insurance: ${this.hand.insurance}`
+        this.controller.updateCurrentScore()
+        this.updateHand()
     }
 
     doubleDown () {
+        this.game.doubleDown(this.index)
+        this.betAmount.innerText = this.hand.bet.toString()
+        html.redrawImageDiv(this.imageDiv, this)
+        this.updateHand()
     }
 
     surrender () {
+        this.game.surrender(this.index)
+        this.updateHand()
     }
 
 
