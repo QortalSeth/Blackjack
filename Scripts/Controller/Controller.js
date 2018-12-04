@@ -5,10 +5,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand"], function (require, exports, Game_1, html, HtmlHand_1) {
+define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", "../Test/TestWins"], function (require, exports, Game_1, html, HtmlHand_1, testWins) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     html = __importStar(html);
+    testWins = __importStar(testWins);
     class Controller {
         constructor(currentScore) {
             this.currentScore = currentScore;
@@ -31,62 +32,13 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand"],
         }
         initialHits(debug) {
             if (debug) {
-                //this.testAceBust()
-                //this.testDoubleDown()
-                //this.test21()
-                this.testInsurance();
+                //this.test = testButtons.testMaxSplits
+                this.test = testWins.dealerWinsByBlackjack;
+                this.test();
             }
             this.dealerHand.hit();
             this.playerHands[0].initialHit();
             this.playerHands[0].hit();
-        }
-        testInsurance() {
-            //     this.game.deck.addCard("Ace", "Clubs")
-            //     this.game.deck.addCard("Queen", "Hearts")
-            this.game.deck.addCard("Ace", "Hearts");
-            this.game.deck.addCard("King", "Spades");
-            this.game.deck.addCard("King", "Spades");
-            this.game.deck.addCard("King", "Spades");
-            this.game.deck.addCard("King", "Spades");
-            this.game.deck.addCard("9", "Spades");
-            this.game.deck.addCard("Ace", "Spades");
-            this.game.deck.addCard("Ace", "Diamonds");
-            this.game.deck.addCard("Ace", "Hearts");
-            this.game.deck.addCard("Ace", "Hearts");
-            this.game.deck.addCard("Ace", "Clubs");
-            this.game.deck.addCard("Ace", "Diamonds");
-        }
-        testDoubleDown() {
-            this.game.deck.addCard("6", "Hearts");
-            this.game.deck.addCard("5", "Hearts");
-            this.game.deck.addCard("8", "Hearts");
-        }
-        testAceBust() {
-            this.game.deck.addCard("Ace", "Hearts");
-            this.game.deck.addCard("King", "Hearts");
-            this.game.deck.addCard("Ace", "Clubs");
-            this.game.deck.addCard("8", "Diamonds");
-        }
-        testMaxSplits() {
-            this.game.deck.addCard("King", "Spades");
-            this.game.deck.addCard("King", "Spades");
-            this.game.deck.addCard("King", "Spades");
-            this.game.deck.addCard("King", "Spades");
-            this.game.deck.addCard("9", "Spades");
-            this.game.deck.addCard("Ace", "Spades");
-            this.game.deck.addCard("Ace", "Diamonds");
-            this.game.deck.addCard("Ace", "Hearts");
-            this.game.deck.addCard("Ace", "Hearts");
-            this.game.deck.addCard("Ace", "Clubs");
-            this.game.deck.addCard("8", "Diamonds");
-        }
-        test21() {
-            this.game.deck.addCard("4", "Spades");
-            this.game.deck.addCard("5", "Diamonds");
-            this.game.deck.addCard("10", "Hearts");
-            this.game.deck.addCard("Ace", "Hearts");
-            this.game.deck.addCard("Ace", "Clubs");
-            this.game.deck.addCard("8", "Diamonds");
         }
         resetGameHtmlData() {
             html.removeDataFromDiv(html.dealerDiv);
@@ -120,6 +72,33 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand"],
         }
         dealerTurn() {
             this.game.dealerTurn();
+            html.redrawImageDiv(this.dealerHand.imageDiv, this.dealerHand);
+            this.dealerHand.updateHand();
+            this.endGame();
+        }
+        endGame() {
+            let totalWinnings = 0;
+            for (let hand of this.playerHands) {
+                let winnings = hand.hand.winnings - hand.hand.bet;
+                totalWinnings += winnings;
+                hand.winningsText.innerText = hand.hand.winningText;
+                if (winnings > 0)
+                    hand.winningsAmount.innerText = `You gained: ${winnings}`;
+                else if (winnings < 0)
+                    hand.winningsAmount.innerText = `You lost: ${-winnings}`;
+                else {
+                    hand.winningsAmount.innerText = `You gained nothing`;
+                }
+            }
+            this.updateCurrentScore();
+            /*loop through player hands.
+            * reveal winnings and winning text
+            * update current score
+            * reveal start new game button
+            * reset game state
+            *
+            *
+            * */
         }
     }
     exports.Controller = Controller;

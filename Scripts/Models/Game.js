@@ -45,7 +45,7 @@ define(["require", "exports", "./Hand", "./Deck"], function (require, exports, H
             return true;
         }
         dealerTurn() {
-            while (Math.floor(this.dealerCards.getLowestScore()) < 17)
+            while (Math.floor(this.dealerCards.getLowestScore()) < 17 && this.dealerCards.getHighestScore() != 21)
                 this.hit(this.dealerCards);
             this.checkWinner();
         }

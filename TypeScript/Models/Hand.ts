@@ -154,40 +154,39 @@ export class Hand {
             this.winnings = this.bet / 2
         }
 
-        if (this.checkBlackjack() === true) {
+        else if (this.checkBlackjack() === true && dealerHand.checkBlackjack() === false) {
             this.winningText = "Player Wins by Blackjack :D"
             this.winnings = this.bet * 3 / 2 + this.bet
         }
 
-        if (dealerHand.checkBlackjack() === true) {
+        else if (dealerHand.checkBlackjack() === true) {
             this.winningText = "Dealer Wins by Blackjack :("
             this.winnings = this.insurance * 2
         }
 
-        if (playerScore > 21) {
+        else if (playerScore > 21) {
             this.winningText = "Dealer Wins"
             this.winnings = 0
         }
 
-        if (dealerScore > 21) {
+        else if (dealerScore > 21) {
             this.winningText = "Player Wins"
             this.winnings = this.bet * 2
         }
 
-        if (dealerScore > playerScore) {
+        else if (dealerScore > playerScore) {
             this.winningText = "Dealer Wins"
             this.winnings = 0
         }
 
-        if (dealerScore === playerScore) {
-            this.winningText = "Well call it a draw @_@"
+        else if (dealerScore === playerScore) {
+            this.winningText = "We'll call it a draw @_@"
             this.winnings = this.bet
         }
-        if (dealerScore < playerScore) {
+        else if (dealerScore < playerScore) {
             this.winningText = "Player Wins"
             this.winnings = this.bet * 2
         }
-
     }
 
 }

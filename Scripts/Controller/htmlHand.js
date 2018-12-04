@@ -52,9 +52,9 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
                 this.betAmount.innerText = this.hand.bet.toString();
                 this.betDiv.appendChild(this.betSpan);
                 this.betDiv.appendChild(this.betAmount);
-                this.winningsSpan = document.createElement("span");
-                this.winningsAmount = document.createElement("span");
-                this.winningsDiv.appendChild(this.winningsSpan);
+                this.winningsText = document.createElement("div");
+                this.winningsAmount = document.createElement("div");
+                this.winningsDiv.appendChild(this.winningsText);
                 this.winningsDiv.appendChild(this.winningsAmount);
             }
         }
@@ -115,10 +115,11 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
             }
             else if (this.hand.checkBust()) {
                 this.hand.stayed = true;
-                //    this.scoreDiv.innerText = `Hand Score: Bust`
+                this.scoreDiv.innerText = `Hand Score: Bust`;
+                console.log(`Bust Score: ${this.hand.getScoreText()}`);
             }
             this.showAvailableButtons();
-            if (this.game.checkEndoPlayerTurn()) {
+            if (this.game.checkEndoPlayerTurn() && this.isPlayer) {
                 this.controller.dealerTurn();
             }
         }

@@ -24,7 +24,7 @@ export class HtmlHand {
 
     betSpan: HTMLElement
     betAmount: HTMLElement
-    winningsSpan: HTMLElement
+    winningsText: HTMLElement
     winningsAmount: HTMLElement
 
 
@@ -82,10 +82,10 @@ export class HtmlHand {
             this.betDiv.appendChild(this.betSpan)
             this.betDiv.appendChild(this.betAmount)
 
-            this.winningsSpan = document.createElement("span")
-            this.winningsAmount = document.createElement("span")
+            this.winningsText = document.createElement("div")
+            this.winningsAmount = document.createElement("div")
 
-            this.winningsDiv.appendChild(this.winningsSpan)
+            this.winningsDiv.appendChild(this.winningsText)
             this.winningsDiv.appendChild(this.winningsAmount)
 
         }
@@ -161,18 +161,17 @@ export class HtmlHand {
         }
         else if (this.hand.checkBust()) {
             this.hand.stayed = true
-            //    this.scoreDiv.innerText = `Hand Score: Bust`
+            this.scoreDiv.innerText = `Hand Score: Bust`
+            console.log(`Bust Score: ${this.hand.getScoreText()}`)
         }
 
         this.showAvailableButtons()
 
-        if(this.game.checkEndoPlayerTurn())
-        {this.controller.dealerTurn()}
+        if (this.game.checkEndoPlayerTurn() && this.isPlayer) {
+            this.controller.dealerTurn()
+        }
 
     }
-
-
-
 
 
     hit (card?: Card) {
