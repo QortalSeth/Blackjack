@@ -4,10 +4,11 @@ import {HtmlHand}       from "./HtmlHand"
 import {Card}           from "../Models/Card"
 import * as testButtons from "../Test/TestButtons"
 import * as testWins    from "../Test/TestWins"
+import {Deck}           from "../Models/Deck"
 
 export class Controller {
     game: Game
-    debug = false
+    debug = true
     dealerHand: HtmlHand
     playerHands: HtmlHand[]
     startMoney = 10000
@@ -25,19 +26,18 @@ export class Controller {
         this.resetGameHtmlData()
         this.updateCurrentScore()
 
-        if (this.debug)
-            html.testDiv.innerText = this.game.deck.toString()
+        if (this.debug) {
+            //html.testDiv.innerText = this.game.deck.toString()
+            //this.showDeck()
+        }
 
-        this.initialHits(true)
         html.startGameButton.style.display = "none"
-        html.betSpan.style.display = "none"
-        html.betTextfield.style.display = "none"
-
-
+        this.betDisplay(false)
+        this.initialHits()
     }
 
-    initialHits (debug: boolean) {
-        if (debug) {
+    initialHits () {
+        if (this.debug) {
             //this.test = testButtons.testMaxSplits
             this.test = testWins.dealerWinsByBlackjack
             this.test()
@@ -54,6 +54,8 @@ export class Controller {
         html.removeDataFromDiv(html.dealerDiv)
         html.removeDataFromDiv(html.playerDiv)
         this.betDisplay(false)
+
+
         this.dealerHand = new HtmlHand(0, this, html.dealerDiv, false)
         this.playerHands = []
         this.playerHands.push(new HtmlHand(0, this, html.playerDiv, true))
@@ -78,11 +80,22 @@ export class Controller {
     betTextFieldListener () {
         let textField = html.betTextfield
         let number = parseInt(textField.value)
-        if (isNaN(number) || number < 20) {
-            html.startGameButton.disabled = true
+
+        if (this.checkValidBet()) {
+            html.startGameButton.disabled = false
         }
         else
-            html.startGameButton.disabled = false
+            html.startGameButton.disabled = true
+    }
+
+    checkValidBet (): boolean {
+        let number = parseInt(html.betTextfield.value)
+
+        let isANumber = isNaN(number) === false
+        let minCheck = number >= 20
+        let maxCheck = number <= this.currentScore
+        return isANumber && minCheck && maxCheck
+
     }
 
     dealerTurn () {
@@ -99,24 +112,33 @@ export class Controller {
             totalWinnings += winnings
             hand.winningsText.innerText = hand.hand.winningText
 
-
+            let winningsText = ""
             if (winnings > 0)
-                hand.winningsAmount.innerText = `You gained: ${winnings}`
+                winningsText = `You gained: ${Math.abs(winnings)}`
             else if (winnings < 0)
-                hand.winningsAmount.innerText = `You lost: ${-winnings}`
+                winningsText = `You lost: ${Math.abs(winnings)}`
             else {
-                hand.winningsAmount.innerText = `You gained nothing`
+                if (hand.hand.insurance > 0)
+                    winningsText = `You lost: ${Math.abs(hand.hand.bet)}, but gained it back because of insurance`
+                else {
+                    winningsText = `You gained: ${Math.abs(winnings)}`
+                }
             }
+            hand.winningsAmount.innerText = winningsText
         }
+        this.currentScore = this.game.score
         this.updateCurrentScore()
-        /*loop through player hands.
-        * reveal winnings and winning text
-        * update current score
-        * reveal start new game button
-        * reset game state
-        *
-        *
-        * */
+        html.startGameButton.style.display = "inline"
+        this.betDisplay(true)
+    }
+
+    showDeck () {
+        let deck = new Deck(1)
+
+        while (deck.isEmpty() === false) {
+            html.addImageToDiv(html.testDiv, deck.cards.pop())
+        }
+
     }
 
 

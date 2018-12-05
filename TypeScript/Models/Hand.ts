@@ -126,8 +126,13 @@ export class Hand {
         return !this.stayed
     }
 
-    checkInsurance (dealerCards: Hand): boolean {
-        return dealerCards.cards[0].type === "Ace" && this.checkStay() && this.insurance === 0 && this.getHighestScore() < 21
+    checkInsurance (dealerCards: Hand, currentScore: number): boolean {
+        let dealerHasAce = dealerCards.cards[0].type === "Ace"
+        let notAlreadyInsured = this.insurance === 0
+        let playerHasNoBlackjack = this.getHighestScore() < 21
+        let playerCanPayForInsurance = (currentScore - this.bet / 2) > 0
+
+        return dealerHasAce && this.checkStay() && notAlreadyInsured && playerHasNoBlackjack && playerCanPayForInsurance
     }
 
     checkSplit (handsNum: number): boolean {
@@ -138,7 +143,7 @@ export class Hand {
     }
 
     checkSurrender (): boolean {
-        return this.cards.length === 2 && this.checkStay()
+        return this.cards.length === 2 && this.checkStay() && this.insurance === 0
     }
 
     checkTurnOver (): boolean {
@@ -161,7 +166,7 @@ export class Hand {
 
         else if (dealerHand.checkBlackjack() === true) {
             this.winningText = "Dealer Wins by Blackjack :("
-            this.winnings = this.insurance * 2
+            this.winnings = this.insurance * 3
         }
 
         else if (playerScore > 21) {

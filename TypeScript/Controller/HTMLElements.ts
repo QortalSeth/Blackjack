@@ -42,7 +42,7 @@ export function createButton (name: string): HTMLInputElement {
 }
 
 export function removeDataFromDiv (div: HTMLElement) {
-    while (div.firstChild)
+    while (div.hasChildNodes())
         div.removeChild(div.firstChild)
 }
 

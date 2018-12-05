@@ -9,16 +9,12 @@ define(["require", "exports", "./Hand", "./Deck"], function (require, exports, H
             this.playerCards = [];
             this.playerCards.push(new Hand_1.Hand(this.applyBet(bet), 0));
             this.deck = new Deck_1.Deck(this.numberOfDecks);
+            this.deck.shuffle();
         }
         applyBet(bet) {
             this.score -= bet;
             return bet;
         }
-        /*
-        // TODO:
-        change checkWinner to only be called after dealerTurn. make it generate a list of win/lose statements for each hand
-        move playerWins and dealerWins to Hand class
-        */
         hit(hand, card) {
             if (card == undefined) {
                 card = hand.addCardFromDeck(this.deck);

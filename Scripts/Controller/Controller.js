@@ -5,7 +5,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", "../Test/TestWins"], function (require, exports, Game_1, html, HtmlHand_1, testWins) {
+define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", "../Test/TestWins", "../Models/Deck"], function (require, exports, Game_1, html, HtmlHand_1, testWins, Deck_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     html = __importStar(html);
@@ -13,7 +13,7 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
     class Controller {
         constructor(currentScore) {
             this.currentScore = currentScore;
-            this.debug = false;
+            this.debug = true;
             this.startMoney = 10000;
             html.startGameButton.addEventListener("click", (event) => this.startNewGame());
             html.betTextfield.addEventListener("keyup", (event) => this.betTextFieldListener());
@@ -23,15 +23,16 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
             this.game = new Game_1.Game(this.currentScore, Math.floor(parseInt(html.betTextfield.value)));
             this.resetGameHtmlData();
             this.updateCurrentScore();
-            if (this.debug)
-                html.testDiv.innerText = this.game.deck.toString();
-            this.initialHits(true);
+            if (this.debug) {
+                //html.testDiv.innerText = this.game.deck.toString()
+                //this.showDeck()
+            }
             html.startGameButton.style.display = "none";
-            html.betSpan.style.display = "none";
-            html.betTextfield.style.display = "none";
+            this.betDisplay(false);
+            this.initialHits();
         }
-        initialHits(debug) {
-            if (debug) {
+        initialHits() {
+            if (this.debug) {
                 //this.test = testButtons.testMaxSplits
                 this.test = testWins.dealerWinsByBlackjack;
                 this.test();
@@ -64,11 +65,18 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
         betTextFieldListener() {
             let textField = html.betTextfield;
             let number = parseInt(textField.value);
-            if (isNaN(number) || number < 20) {
-                html.startGameButton.disabled = true;
+            if (this.checkValidBet()) {
+                html.startGameButton.disabled = false;
             }
             else
-                html.startGameButton.disabled = false;
+                html.startGameButton.disabled = true;
+        }
+        checkValidBet() {
+            let number = parseInt(html.betTextfield.value);
+            let isANumber = isNaN(number) === false;
+            let minCheck = number >= 20;
+            let maxCheck = number <= this.currentScore;
+            return isANumber && minCheck && maxCheck;
         }
         dealerTurn() {
             this.game.dealerTurn();
@@ -82,23 +90,30 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
                 let winnings = hand.hand.winnings - hand.hand.bet;
                 totalWinnings += winnings;
                 hand.winningsText.innerText = hand.hand.winningText;
+                let winningsText = "";
                 if (winnings > 0)
-                    hand.winningsAmount.innerText = `You gained: ${winnings}`;
+                    winningsText = `You gained: ${Math.abs(winnings)}`;
                 else if (winnings < 0)
-                    hand.winningsAmount.innerText = `You lost: ${-winnings}`;
+                    winningsText = `You lost: ${Math.abs(winnings)}`;
                 else {
-                    hand.winningsAmount.innerText = `You gained nothing`;
+                    if (hand.hand.insurance > 0)
+                        winningsText = `You lost: ${Math.abs(hand.hand.bet)}, but gained it back because of insurance`;
+                    else {
+                        winningsText = `You gained: ${Math.abs(winnings)}`;
+                    }
                 }
+                hand.winningsAmount.innerText = winningsText;
             }
+            this.currentScore = this.game.score;
             this.updateCurrentScore();
-            /*loop through player hands.
-            * reveal winnings and winning text
-            * update current score
-            * reveal start new game button
-            * reset game state
-            *
-            *
-            * */
+            html.startGameButton.style.display = "inline";
+            this.betDisplay(true);
+        }
+        showDeck() {
+            let deck = new Deck_1.Deck(1);
+            while (deck.isEmpty() === false) {
+                html.addImageToDiv(html.testDiv, deck.cards.pop());
+            }
         }
     }
     exports.Controller = Controller;

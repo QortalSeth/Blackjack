@@ -38,7 +38,7 @@ define(["require", "exports"], function (require, exports) {
     }
     exports.createButton = createButton;
     function removeDataFromDiv(div) {
-        while (div.firstChild)
+        while (div.hasChildNodes())
             div.removeChild(div.firstChild);
     }
     exports.removeDataFromDiv = removeDataFromDiv;

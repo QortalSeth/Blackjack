@@ -127,7 +127,7 @@ export class HtmlHand {
             this.buttonDisplay(this.hitButton, this.hand.checkHit())
             this.buttonDisplay(this.stayButton, this.hand.checkStay())
             this.buttonDisplay(this.splitButton, this.hand.checkSplit(this.controller.playerHands.length))
-            this.buttonDisplay(this.insuranceButton, this.hand.checkInsurance(this.game.dealerCards))
+            this.buttonDisplay(this.insuranceButton, this.hand.checkInsurance(this.game.dealerCards, this.game.score))
             this.buttonDisplay(this.doubleDownButton, this.hand.checkDoubleDown())
             this.buttonDisplay(this.surrenderButton, this.hand.checkSurrender())
         }
@@ -161,7 +161,7 @@ export class HtmlHand {
         }
         else if (this.hand.checkBust()) {
             this.hand.stayed = true
-            this.scoreDiv.innerText = `Hand Score: Bust`
+            this.scoreDiv.innerText = `Hand Score: Bust (${this.hand.getScoreText()})`
             console.log(`Bust Score: ${this.hand.getScoreText()}`)
         }
 
@@ -235,30 +235,9 @@ export class HtmlHand {
         this.updateHand()
     }
 
-
-    /*
-    checkForEndOfGame() {
-
-      this.game.checkWinner()
-      if (this.game.gameOver) {
-
-        // display winning text reset buttons
-        this.html.winnerText.innerText = this.game.winningText
-        if (this.game.winnerIsPlayer)
-          this.html.winnerText.style.color = 'blue'
-
-        else
-          this.html.winnerText.style.color = 'red'
-
-        this.html.startGameButton.style.display = 'inline'
-        this.html.hitButton.style.display = 'none'
-        this.html.stayButton.style.display = 'none'
-      }
-
-
-
+    clear () {
+        html.removeDataFromDiv(this.mainDiv)
     }
-  */
 
 
 }

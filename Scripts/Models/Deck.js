@@ -12,7 +12,6 @@ define(["require", "exports", "./Card"], function (require, exports, Card_1) {
                     }
                 }
             }
-            this.shuffle();
         }
         addCard(type, suit) {
             this.cards.push(new Card_1.Card(type, suit));
@@ -40,7 +39,12 @@ define(["require", "exports", "./Card"], function (require, exports, Card_1) {
             }
             return returnValue;
         }
-        printDeck() { console.log(this.toString); }
+        isEmpty() {
+            return this.cards.length === 0;
+        }
+        printDeck() {
+            console.log(this.toString);
+        }
     }
     exports.Deck = Deck;
 });

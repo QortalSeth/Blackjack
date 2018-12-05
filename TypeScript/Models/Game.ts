@@ -15,18 +15,13 @@ export class Game {
         this.playerCards = []
         this.playerCards.push(new Hand(this.applyBet(bet), 0))
         this.deck = new Deck(this.numberOfDecks)
+        this.deck.shuffle()
     }
 
     applyBet (bet: number) {
         this.score -= bet
         return bet
     }
-
-    /*
-    // TODO:
-    change checkWinner to only be called after dealerTurn. make it generate a list of win/lose statements for each hand
-    move playerWins and dealerWins to Hand class
-    */
 
     hit (hand: Hand, card?: Card): Card {
 

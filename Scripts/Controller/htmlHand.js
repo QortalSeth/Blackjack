@@ -86,7 +86,7 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
                 this.buttonDisplay(this.hitButton, this.hand.checkHit());
                 this.buttonDisplay(this.stayButton, this.hand.checkStay());
                 this.buttonDisplay(this.splitButton, this.hand.checkSplit(this.controller.playerHands.length));
-                this.buttonDisplay(this.insuranceButton, this.hand.checkInsurance(this.game.dealerCards));
+                this.buttonDisplay(this.insuranceButton, this.hand.checkInsurance(this.game.dealerCards, this.game.score));
                 this.buttonDisplay(this.doubleDownButton, this.hand.checkDoubleDown());
                 this.buttonDisplay(this.surrenderButton, this.hand.checkSurrender());
             }
@@ -115,7 +115,7 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
             }
             else if (this.hand.checkBust()) {
                 this.hand.stayed = true;
-                this.scoreDiv.innerText = `Hand Score: Bust`;
+                this.scoreDiv.innerText = `Hand Score: Bust (${this.hand.getScoreText()})`;
                 console.log(`Bust Score: ${this.hand.getScoreText()}`);
             }
             this.showAvailableButtons();
@@ -171,6 +171,9 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
         surrender() {
             this.game.surrender(this.index);
             this.updateHand();
+        }
+        clear() {
+            html.removeDataFromDiv(this.mainDiv);
         }
     }
     exports.HtmlHand = HtmlHand;
