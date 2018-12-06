@@ -87,10 +87,11 @@ define(["require", "exports"], function (require, exports) {
         checkBust() {
             return this.getLowestScore() > 21;
         }
-        checkDoubleDown() {
+        checkDoubleDown(currentScore) {
             let scoreCheck = this.getHighestScore() < 11;
             let cardCountCheck = this.cards.length <= 2;
-            return scoreCheck && cardCountCheck && this.checkStay();
+            let playerCanPayForDoubleDown = currentScore >= this.bet;
+            return scoreCheck && cardCountCheck && playerCanPayForDoubleDown && this.checkStay();
         }
         checkHit() {
             return this.getLowestScore() <= 21 && this.checkStay();
@@ -105,14 +106,18 @@ define(["require", "exports"], function (require, exports) {
             let playerCanPayForInsurance = (currentScore - this.bet / 2) > 0;
             return dealerHasAce && this.checkStay() && notAlreadyInsured && playerHasNoBlackjack && playerCanPayForInsurance;
         }
-        checkSplit(handsNum) {
+        checkSplit(handsNum, currentScore) {
             let cardTypeCheck = this.cards[0].getScore() === this.cards[1].getScore();
             let cardCountCheck = this.cards.length === 2;
             let handCountCheck = handsNum < 4;
-            return cardTypeCheck && cardCountCheck && handCountCheck && this.checkStay();
+            let playerCanPayForSplit = currentScore >= this.bet;
+            return cardTypeCheck && cardCountCheck && handCountCheck && playerCanPayForSplit && this.checkStay();
         }
-        checkSurrender() {
-            return this.cards.length === 2 && this.checkStay() && this.insurance === 0;
+        checkSurrender(currentScore) {
+            let cardLengthCheck = this.cards.length === 2;
+            let noInsuranceCheck = this.insurance === 0;
+            let playerCanPayForSurrender = currentScore >= this.bet / 2;
+            return cardLengthCheck && this.checkStay() && noInsuranceCheck && playerCanPayForSurrender;
         }
         checkTurnOver() {
             return this.checkBust() || this.checkStay();

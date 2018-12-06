@@ -111,11 +111,12 @@ export class Hand {
     }
 
 
-    checkDoubleDown (): boolean {
+    checkDoubleDown (currentScore: number): boolean {
         let scoreCheck = this.getHighestScore() < 11
         let cardCountCheck = this.cards.length <= 2
+        let playerCanPayForDoubleDown = currentScore >= this.bet
 
-        return scoreCheck && cardCountCheck && this.checkStay()
+        return scoreCheck && cardCountCheck && playerCanPayForDoubleDown && this.checkStay()
     }
 
     checkHit () {
@@ -135,15 +136,19 @@ export class Hand {
         return dealerHasAce && this.checkStay() && notAlreadyInsured && playerHasNoBlackjack && playerCanPayForInsurance
     }
 
-    checkSplit (handsNum: number): boolean {
+    checkSplit (handsNum: number, currentScore: number): boolean {
         let cardTypeCheck = this.cards[0].getScore() === this.cards[1].getScore()
         let cardCountCheck = this.cards.length === 2
         let handCountCheck = handsNum < 4
-        return cardTypeCheck && cardCountCheck && handCountCheck && this.checkStay()
+        let playerCanPayForSplit = currentScore >= this.bet
+        return cardTypeCheck && cardCountCheck && handCountCheck && playerCanPayForSplit && this.checkStay()
     }
 
-    checkSurrender (): boolean {
-        return this.cards.length === 2 && this.checkStay() && this.insurance === 0
+    checkSurrender (currentScore: number): boolean {
+        let cardLengthCheck = this.cards.length === 2
+        let noInsuranceCheck = this.insurance === 0
+        let playerCanPayForSurrender = currentScore >= this.bet / 2
+        return cardLengthCheck && this.checkStay() && noInsuranceCheck && playerCanPayForSurrender
     }
 
     checkTurnOver (): boolean {

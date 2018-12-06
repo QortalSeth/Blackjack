@@ -8,10 +8,11 @@ import {Deck}           from "../Models/Deck"
 
 export class Controller {
     game: Game
-    debug = true
+    debug = false
     dealerHand: HtmlHand
     playerHands: HtmlHand[]
     startMoney = 10000
+    minimumBet = 20
     private test: Function
 
     constructor (public currentScore: number) {
@@ -39,7 +40,7 @@ export class Controller {
     initialHits () {
         if (this.debug) {
             //this.test = testButtons.testMaxSplits
-            this.test = testWins.dealerWinsByBlackjack
+            this.test = testWins.playerWinsByBlackjackAnd21
             this.test()
         }
 
@@ -92,7 +93,7 @@ export class Controller {
         let number = parseInt(html.betTextfield.value)
 
         let isANumber = isNaN(number) === false
-        let minCheck = number >= 20
+        let minCheck = number >= this.minimumBet
         let maxCheck = number <= this.currentScore
         return isANumber && minCheck && maxCheck
 
@@ -130,6 +131,11 @@ export class Controller {
         this.updateCurrentScore()
         html.startGameButton.style.display = "inline"
         this.betDisplay(true)
+
+        if (this.currentScore < this.minimumBet) {
+            html.startGameButton.style.display = "none"
+            html.testDiv.innerText = "You don't have enough to continue. Game Over :("
+        }
     }
 
     showDeck () {

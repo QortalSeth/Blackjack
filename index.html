@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<body>
 <style>
 
     #Hit {
@@ -26,32 +25,48 @@
     #playerScoreDiv {
         clear: left;
     }
-    
+
+    /*
+    body {
+        background: url("Images/blackjackTable.jpeg") no-repeat center fixed;
+        background-size: cover;
+    }
+
+    h1, h2, span {
+        background-color: rgba(0, 250, 0, 0.3);
+    }
+
+    */
 </style>
 
+<body>
 
-<h1>Welcome to BlackJack</h1>
-<h2 id="by">by Seth Jackson</h2>
+<div id="textDiv">
 
-<div id="betDiv">
-    <span id='betSpan'>Bet Amount:</span>
-    <input id='betTextfield' type='number' value="20">
 
-    <div>
-        <span id="scoreSpan"> Current Score: </span>
-        <span id="scoreAmount"></span>
+    <h1>Welcome to BlackJack</h1>
+    <h2 id="by">by Seth Jackson</h2>
+
+    <div id="betDiv">
+        <span id='betSpan'>Bet Amount:</span>
+        <input id='betTextfield' type='number' value="20">
+
+        <div>
+            <span id="scoreSpan"> Current Score: </span>
+            <span id="scoreAmount"></span>
+        </div>
     </div>
 
+
+    <div id="dealerHandDiv"></div>
+    <div id="playerHandDiv" class="handDiv"></div>
+
+    <div id="buttonsDiv">
+        <input id="startGameButton" type="button" value="Start New Game">
+    </div>
+    <div id="testDiv"></div>
+
 </div>
-
-<div id="dealerHandDiv"></div>
-<div id="playerHandDiv" class="handDiv"></div>
-
-<div id="buttonsDiv">
-    <input id="startGameButton" type="button" value="Start New Game">
-</div>
-<div id="testDiv"></div>
-
 <script type="text/javascript" src="Scripts/require.js" data-main="Scripts/Main.js"></script>
 </body>
 </html>

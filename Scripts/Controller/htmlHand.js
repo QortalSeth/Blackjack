@@ -85,10 +85,10 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
             if (this.isPlayer) {
                 this.buttonDisplay(this.hitButton, this.hand.checkHit());
                 this.buttonDisplay(this.stayButton, this.hand.checkStay());
-                this.buttonDisplay(this.splitButton, this.hand.checkSplit(this.controller.playerHands.length));
+                this.buttonDisplay(this.splitButton, this.hand.checkSplit(this.controller.playerHands.length, this.game.score));
                 this.buttonDisplay(this.insuranceButton, this.hand.checkInsurance(this.game.dealerCards, this.game.score));
-                this.buttonDisplay(this.doubleDownButton, this.hand.checkDoubleDown());
-                this.buttonDisplay(this.surrenderButton, this.hand.checkSurrender());
+                this.buttonDisplay(this.doubleDownButton, this.hand.checkDoubleDown(this.game.score));
+                this.buttonDisplay(this.surrenderButton, this.hand.checkSurrender(this.game.score));
             }
         }
         buttonDisplay(button, show) {
@@ -102,6 +102,7 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
                 this.scoreDiv.innerText = `Hand Score: ${this.hand.getScoreText()}`;
             else
                 this.scoreDiv.innerText = `Dealer Score: ${this.hand.getScoreText()}`;
+            this.scoreDiv.style.backgroundColor = "rgba(0, 250, 250, 0.0);";
         }
         updateHand() {
             this.updateScore();

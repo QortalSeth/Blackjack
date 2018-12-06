@@ -13,8 +13,9 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
     class Controller {
         constructor(currentScore) {
             this.currentScore = currentScore;
-            this.debug = true;
+            this.debug = false;
             this.startMoney = 10000;
+            this.minimumBet = 20;
             html.startGameButton.addEventListener("click", (event) => this.startNewGame());
             html.betTextfield.addEventListener("keyup", (event) => this.betTextFieldListener());
             html.scoreAmount.innerText = this.startMoney.toString();
@@ -34,7 +35,7 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
         initialHits() {
             if (this.debug) {
                 //this.test = testButtons.testMaxSplits
-                this.test = testWins.dealerWinsByBlackjack;
+                this.test = testWins.playerWinsByBlackjackAnd21;
                 this.test();
             }
             this.dealerHand.hit();
@@ -74,7 +75,7 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
         checkValidBet() {
             let number = parseInt(html.betTextfield.value);
             let isANumber = isNaN(number) === false;
-            let minCheck = number >= 20;
+            let minCheck = number >= this.minimumBet;
             let maxCheck = number <= this.currentScore;
             return isANumber && minCheck && maxCheck;
         }
@@ -108,6 +109,10 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
             this.updateCurrentScore();
             html.startGameButton.style.display = "inline";
             this.betDisplay(true);
+            if (this.currentScore < this.minimumBet) {
+                html.startGameButton.style.display = "none";
+                html.testDiv.innerText = "You don't have enough to continue. Game Over :(";
+            }
         }
         showDeck() {
             let deck = new Deck_1.Deck(1);
