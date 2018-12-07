@@ -142,6 +142,11 @@ define(["require", "exports"], function (require, exports) {
     }
     exports.everyoneBusts = everyoneBusts;
     function unknownFailure() {
+        this.game.deck.addCard("10", "Diamonds");
+        this.game.deck.addCard("4", "Spades");
+        this.game.deck.addCard("4", "Hearts");
+        this.game.deck.addCard("10", "Diamonds");
+        this.game.deck.addCard("Ace", "Spades");
     }
     exports.unknownFailure = unknownFailure;
 });

@@ -35,7 +35,7 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
         initialHits() {
             if (this.debug) {
                 //this.test = testButtons.testMaxSplits
-                this.test = testWins.playerWinsByBlackjackAnd21;
+                this.test = testWins.unknownFailure;
                 this.test();
             }
             this.dealerHand.hit();
@@ -89,20 +89,22 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
             let totalWinnings = 0;
             for (let hand of this.playerHands) {
                 let winnings = hand.hand.winnings - hand.hand.bet;
-                totalWinnings += winnings;
-                hand.winningsText.innerText = hand.hand.winningText;
                 let winningsText = "";
                 if (winnings > 0)
                     winningsText = `You gained: ${Math.abs(winnings)}`;
-                else if (winnings < 0)
-                    winningsText = `You lost: ${Math.abs(winnings)}`;
-                else {
-                    if (hand.hand.insurance > 0)
-                        winningsText = `You lost: ${Math.abs(hand.hand.bet)}, but gained it back because of insurance`;
-                    else {
-                        winningsText = `You gained: ${Math.abs(winnings)}`;
+                else if (winnings < 0) {
+                    if (hand.hand.insurance > 0 && this.dealerHand.hand.checkBlackjack()) {
+                        winningsText = `You lost: ${Math.abs(hand.hand.bet)}, but gained it back because of insurance.`;
+                        this.game.score += hand.hand.insurance * 3;
                     }
+                    else
+                        winningsText = `You lost: ${Math.abs(winnings)}`;
                 }
+                else {
+                    winningsText = `You gained: ${Math.abs(winnings)}`;
+                }
+                totalWinnings += winnings;
+                hand.winningsSpan.innerText = hand.hand.winningText;
                 hand.winningsAmount.innerText = winningsText;
             }
             this.currentScore = this.game.score;
@@ -111,7 +113,11 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
             this.betDisplay(true);
             if (this.currentScore < this.minimumBet) {
                 html.startGameButton.style.display = "none";
-                html.testDiv.innerText = "You don't have enough to continue. Game Over :(";
+                let span = document.createElement("span");
+                span.innerText = "You don't have enough to continue. Game Over :(";
+                span.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+                span.style.fontSize = "xx-large";
+                html.testDiv.appendChild(span);
             }
         }
         showDeck() {

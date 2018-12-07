@@ -16,36 +16,40 @@
     / / margin-bottom: 30 px;
     }
 
-    #buttons {
-        height: 50px;
-        top: 200px;
 
-    }
-
-    #playerScoreDiv {
-        clear: left;
-    }
-
-    /*
     body {
-        background: url("Images/blackjackTable.jpeg") no-repeat center fixed;
+        background: url("Images/02_Blackjack_Table.jpg") no-repeat center fixed;
         background-size: cover;
     }
 
-    h1, h2, span {
+    span {
         background-color: rgba(0, 250, 0, 0.3);
     }
 
-    */
+    h1, h2 {
+        display: inline;
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    #headerDiv {
+        text-align: center;
+
+    }
+
+    #score
+
+
 </style>
 
 <body>
 
 <div id="textDiv">
 
-
-    <h1>Welcome to BlackJack</h1>
-    <h2 id="by">by Seth Jackson</h2>
+    <div id="headerDiv">
+        <h1>Welcome to BlackJack</h1> <br>
+        <h2 id="by">by Seth Jackson</h2>
+    </div>
+    <br>
 
     <div id="betDiv">
         <span id='betSpan'>Bet Amount:</span>
@@ -55,6 +59,7 @@
             <span id="scoreSpan"> Current Score: </span>
             <span id="scoreAmount"></span>
         </div>
+        <br>
     </div>
 
 

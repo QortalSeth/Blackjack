@@ -14,8 +14,8 @@ define(["require", "exports"], function (require, exports) {
     function addImageToDiv(div, card) {
         var imageTag = document.createElement("img");
         imageTag.setAttribute("src", card.imageSrc);
-        imageTag.setAttribute("height", "90");
-        imageTag.setAttribute("width", "125");
+        imageTag.setAttribute("height", "100");
+        imageTag.setAttribute("width", "100");
         imageTag.setAttribute("alt", "Error: Card Not Found");
         imageTag.style.marginRight = "10px";
         div.appendChild(imageTag);

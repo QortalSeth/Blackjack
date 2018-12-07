@@ -178,4 +178,11 @@ export function everyoneBusts (this: Controller) {
 
 export function unknownFailure (this: Controller) {
 
+    this.game.deck.addCard("10", "Diamonds")
+
+    this.game.deck.addCard("4", "Spades")
+    this.game.deck.addCard("4", "Hearts")
+    this.game.deck.addCard("10", "Diamonds")
+
+    this.game.deck.addCard("Ace", "Spades")
 }

@@ -135,7 +135,7 @@ define(["require", "exports"], function (require, exports) {
             }
             else if (dealerHand.checkBlackjack() === true) {
                 this.winningText = "Dealer Wins by Blackjack :(";
-                this.winnings = this.insurance * 3;
+                this.winnings = 0;
             }
             else if (playerScore > 21) {
                 this.winningText = "Dealer Wins";

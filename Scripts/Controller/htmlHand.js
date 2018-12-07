@@ -38,6 +38,8 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
             this.betDiv = document.createElement("div");
             this.insuranceDiv = document.createElement("div");
             this.winningsDiv = document.createElement("div");
+            this.scoreSpan = document.createElement("span");
+            this.scoreDiv.appendChild(this.scoreSpan);
             this.mainDiv.appendChild(this.imageDiv);
             this.mainDiv.appendChild(this.scoreDiv);
             this.mainDiv.appendChild(this.betDiv);
@@ -52,9 +54,13 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
                 this.betAmount.innerText = this.hand.bet.toString();
                 this.betDiv.appendChild(this.betSpan);
                 this.betDiv.appendChild(this.betAmount);
-                this.winningsText = document.createElement("div");
-                this.winningsAmount = document.createElement("div");
-                this.winningsDiv.appendChild(this.winningsText);
+                this.insuranceSpan = document.createElement("span");
+                this.insuranceDiv.appendChild(this.insuranceSpan);
+                this.winningsSpan = document.createElement("span");
+                let space = document.createElement("br");
+                this.winningsAmount = document.createElement("span");
+                this.winningsDiv.appendChild(this.winningsSpan);
+                this.winningsDiv.appendChild(space);
                 this.winningsDiv.appendChild(this.winningsAmount);
             }
         }
@@ -99,24 +105,29 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
         }
         updateScore() {
             if (this.isPlayer)
-                this.scoreDiv.innerText = `Hand Score: ${this.hand.getScoreText()}`;
+                this.scoreSpan.innerText = `Hand Score: ${this.hand.getScoreText()}`;
             else
-                this.scoreDiv.innerText = `Dealer Score: ${this.hand.getScoreText()}`;
-            this.scoreDiv.style.backgroundColor = "rgba(0, 250, 250, 0.0);";
+                this.scoreSpan.innerText = `Dealer Score: ${this.hand.getScoreText()}`;
+            //this.scoreDiv.style.backgroundColor = "rgba(0, 250, 250, 0.5);"
         }
         updateHand() {
             this.updateScore();
+            let startText = "";
+            if (this.isPlayer)
+                startText = "Hand";
+            else
+                startText = "Dealer";
             if (this.hand.checkBlackjack()) {
                 this.hand.stayed = true;
-                this.scoreDiv.innerText = `Hand Score: Blackjack`;
+                this.scoreSpan.innerText = `${startText} Score: Blackjack`;
             }
             else if (this.hand.check21()) {
                 this.hand.stayed = true;
-                this.scoreDiv.innerText = `Hand Score: 21`;
+                this.scoreSpan.innerText = `${startText} Score: 21`;
             }
             else if (this.hand.checkBust()) {
                 this.hand.stayed = true;
-                this.scoreDiv.innerText = `Hand Score: Bust (${this.hand.getScoreText()})`;
+                this.scoreSpan.innerText = `${startText} Score: Bust (${this.hand.getScoreText()})`;
                 console.log(`Bust Score: ${this.hand.getScoreText()}`);
             }
             this.showAvailableButtons();
@@ -159,7 +170,7 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
         }
         insurance() {
             this.game.insureHand(this.index);
-            this.insuranceDiv.innerText = `Insurance: ${this.hand.insurance}`;
+            this.insuranceSpan.innerText = `Insurance: ${this.hand.insurance}`;
             this.controller.updateCurrentScore();
             this.updateHand();
         }
