@@ -136,7 +136,7 @@ export class Controller {
         this.updateCurrentScore()
         html.startGameButton.style.display = "inline"
         this.betDisplay(true)
-
+        this.betTextFieldListener()
         if (this.currentScore < this.minimumBet) {
             html.startGameButton.style.display = "none"
             let span = document.createElement("span")
