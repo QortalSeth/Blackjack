@@ -47,6 +47,8 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
             this.mainDiv.appendChild(this.winningsDiv);
             this.mainDiv.appendChild(this.buttonDiv);
             this.mainDiv.appendChild(document.createElement("br"));
+            this.mainDiv.style.display = "inline-block";
+            this.mainDiv.style.marginLeft = "10%";
             if (this.isPlayer) {
                 this.betSpan = document.createElement("span");
                 this.betSpan.innerText = "Current Bet: ";
@@ -72,6 +74,8 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
             this.insuranceButton = html.createButton("Insurance");
             this.doubleDownButton = html.createButton("Double Down");
             this.surrenderButton = html.createButton("Surrender");
+            let invisibleButton = html.createButton("invis");
+            invisibleButton.style.visibility = "hidden";
             //append buttons to buttonDiv
             this.buttonDiv.appendChild(this.hitButton);
             this.buttonDiv.appendChild(this.stayButton);
@@ -79,6 +83,7 @@ define(["require", "exports", "./HTMLElements"], function (require, exports, htm
             this.buttonDiv.appendChild(this.insuranceButton);
             this.buttonDiv.appendChild(this.doubleDownButton);
             this.buttonDiv.appendChild(this.surrenderButton);
+            this.buttonDiv.appendChild(invisibleButton);
             //add button listeners
             this.hitButton.addEventListener("click", (event) => this.hit());
             this.stayButton.addEventListener("click", (event) => this.stay());

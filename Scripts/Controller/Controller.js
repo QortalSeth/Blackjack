@@ -13,7 +13,7 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
     class Controller {
         constructor(currentScore) {
             this.currentScore = currentScore;
-            this.debug = false;
+            this.debug = true;
             this.startMoney = 10000;
             this.minimumBet = 20;
             html.startGameButton.addEventListener("click", (event) => this.startNewGame());
@@ -35,7 +35,7 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
         initialHits() {
             if (this.debug) {
                 //this.test = testButtons.testMaxSplits
-                this.test = testWins.unknownFailure;
+                this.test = testWins.dealerWinsByScore;
                 this.test();
             }
             this.dealerHand.hit();

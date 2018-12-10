@@ -8,7 +8,7 @@ import {Deck}           from "../Models/Deck"
 
 export class Controller {
     game: Game
-    debug = false
+    debug = true
     dealerHand: HtmlHand
     playerHands: HtmlHand[]
     startMoney = 10000
@@ -40,7 +40,7 @@ export class Controller {
     initialHits () {
         if (this.debug) {
             //this.test = testButtons.testMaxSplits
-            this.test = testWins.unknownFailure
+            this.test = testWins.dealerWinsByScore
             this.test()
         }
 

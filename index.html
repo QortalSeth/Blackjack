@@ -23,17 +23,28 @@
     }
 
     span {
-        background-color: rgba(0, 250, 0, 0.3);
+        background-color: rgba(0, 255, 255, 0.5);
     }
 
     h1, h2 {
         display: inline;
-        background-color: rgba(255, 255, 255, 0.3);
+        background-color: rgba(255, 0, 0, 0.5);
     }
 
     #headerDiv {
         text-align: center;
 
+    }
+
+    #dealerHandDiv {
+        margin: auto;
+        width: 30%;
+    / / border: 5 px solid #ff0000;
+    }
+
+    #playerHandDiv {
+        margin-top: 200px;
+    / / border: 5 px solid #ff0000;
     }
 
     #score
@@ -60,15 +71,17 @@
             <span id="scoreAmount"></span>
         </div>
         <br>
+        <div id="buttonsDiv">
+            <input id="startGameButton" type="button" value="Start New Game">
+        </div>
+        <br>
     </div>
 
 
     <div id="dealerHandDiv"></div>
     <div id="playerHandDiv" class="handDiv"></div>
 
-    <div id="buttonsDiv">
-        <input id="startGameButton" type="button" value="Start New Game">
-    </div>
+
     <div id="testDiv"></div>
 
 </div>
