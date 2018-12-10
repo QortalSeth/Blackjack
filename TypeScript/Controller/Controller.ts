@@ -8,10 +8,10 @@ import {Deck}           from "../Models/Deck"
 
 export class Controller {
     game: Game
-    debug = true
+    debug = false
     dealerHand: HtmlHand
     playerHands: HtmlHand[]
-    startMoney = 10000
+    startMoney = 1000
     minimumBet = 20
     private test: Function
 

@@ -13,8 +13,8 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
     class Controller {
         constructor(currentScore) {
             this.currentScore = currentScore;
-            this.debug = true;
-            this.startMoney = 10000;
+            this.debug = false;
+            this.startMoney = 1000;
             this.minimumBet = 20;
             html.startGameButton.addEventListener("click", (event) => this.startNewGame());
             html.betTextfield.addEventListener("keyup", (event) => this.betTextFieldListener());
