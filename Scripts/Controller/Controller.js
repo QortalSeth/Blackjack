@@ -11,14 +11,13 @@ define(["require", "exports", "../Models/Game", "./HTMLElements", "./HtmlHand", 
     html = __importStar(html);
     testWins = __importStar(testWins);
     class Controller {
-        constructor(currentScore) {
-            this.currentScore = currentScore;
+        constructor() {
             this.debug = false;
-            this.startMoney = 1000;
+            this.currentScore = 1000;
             this.minimumBet = 20;
             html.startGameButton.addEventListener("click", (event) => this.startNewGame());
             html.betTextfield.addEventListener("keyup", (event) => this.betTextFieldListener());
-            html.scoreAmount.innerText = this.startMoney.toString();
+            html.scoreAmount.innerText = this.currentScore.toString();
         }
         startNewGame() {
             this.game = new Game_1.Game(this.currentScore, Math.floor(parseInt(html.betTextfield.value)));

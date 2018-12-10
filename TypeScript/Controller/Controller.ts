@@ -11,14 +11,14 @@ export class Controller {
     debug = false
     dealerHand: HtmlHand
     playerHands: HtmlHand[]
-    startMoney = 1000
+    currentScore = 1000
     minimumBet = 20
     private test: Function
 
-    constructor (public currentScore: number) {
+    constructor () {
         html.startGameButton.addEventListener("click", (event) => this.startNewGame())
         html.betTextfield.addEventListener("keyup", (event) => this.betTextFieldListener())
-        html.scoreAmount.innerText = this.startMoney.toString()
+        html.scoreAmount.innerText = this.currentScore.toString()
     }
 
 
@@ -144,7 +144,6 @@ export class Controller {
             span.style.backgroundColor = "rgba(255, 255, 255, 0.5)"
             span.style.fontSize = "xx-large"
             html.testDiv.appendChild(span)
-
         }
     }
 

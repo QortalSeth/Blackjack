@@ -1,7 +1,7 @@
 define(["require", "exports", "./Controller/Controller"], function (require, exports, Controller_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    let controller = new Controller_1.Controller(10000);
+    let controller = new Controller_1.Controller();
 });
 /*
 To do :
