@@ -1,1 +1,0 @@
-{"version":3,"file":"PlayerFunctions.js","sourceRoot":"","sources":["../../TypeScript/Controller/PlayerFunctions.ts"],"names":[],"mappings":"","sourcesContent":["import { Game } from '../Models/Game'\nimport { Controller } from './Controller'\nimport * as html from './HTMLElements'\n\n\n\n\n\n\n\n"]}
